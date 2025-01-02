@@ -16,14 +16,73 @@ interface IPetTableProps {
 
 export const PetTable: React.FC<IPetTableProps> = ({ pets }) => {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        boxShadow: 3,
+        borderRadius: "8px",
+        overflowX: "auto",
+      }}
+    >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Category </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                backgroundColor: "#f5f5f5",
+                fontSize: {
+                  xs: "0.75rem",
+                  sm: "0.875rem",
+                  md: "1rem",
+                  lg: "1.125rem",
+                },
+              }}
+            >
+              ID
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                backgroundColor: "#f5f5f5",
+                fontSize: {
+                  xs: "0.75rem",
+                  sm: "0.875rem",
+                  md: "1rem",
+                  lg: "1.125rem",
+                },
+              }}
+            >
+              Name
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                backgroundColor: "#f5f5f5",
+                fontSize: {
+                  xs: "0.75rem",
+                  sm: "0.875rem",
+                  md: "1rem",
+                  lg: "1.125rem",
+                },
+              }}
+            >
+              Status
+            </TableCell>
+            <TableCell
+              sx={{
+                fontWeight: "bold",
+                backgroundColor: "#f5f5f5",
+                fontSize: {
+                  xs: "0.75rem",
+                  sm: "0.875rem",
+                  md: "1rem",
+                  lg: "1.125rem",
+                },
+              }}
+            >
+              Category{" "}
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
