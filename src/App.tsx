@@ -1,14 +1,12 @@
-import './App.css'
+import "./App.css";
+import Layout from "./containers/layouts/Layout";
 
 function App() {
-
   return (
     <>
-      <div>
-        Hello
-      </div>
+      <Layout />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
