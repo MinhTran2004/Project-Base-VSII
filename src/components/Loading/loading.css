@@ -1,0 +1,40 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.spinner {
+  font-size: 50px;
+  animation: spinLoadingData 1s linear infinite;
+}
+
+@keyframes spinLoadingData {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  animation: spinLoadingButton 1s linear infinite;
+}
+
+@keyframes spinLoadingButton {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
