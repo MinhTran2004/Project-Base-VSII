@@ -1,7 +1,47 @@
 import { Box, Button, Typography } from "@mui/material"
-import FormCreateuserList from "../components/FormCreateUserList";
+import FormCreateUserList from "../components/FormCreateUserList";
+import axios from 'axios';
+import React, { useState } from "react";
 
 const CreateUserList = () => {
+    const [expanded, setExpanded] = React.useState('1');
+    const [buttonSaveData, setButtonSaveData] = useState(true);
+    const [listCreateUser, setListCreateUser] = React.useState([{
+        index: '1',
+        formData: {
+            username: "asd",
+            firstName: "asd",
+            lastName: "asd",
+            email: "tranminh209204@gmail.com",
+            password: "123456",
+            phone: "0987654321",
+            userStatus: 0,
+        }
+    }]);
+
+    const postListUser = async () => {
+        const checkListUser = listCreateUser.every((item) => {
+            const formData = item.formData;
+            return Object.values(formData).every(value => 
+                value !== null && value !== undefined && value !== ""
+              );
+        });
+
+        if (checkListUser) {
+            const listData = listCreateUser.map((item) => {
+                return item.formData;
+            });
+
+            try{
+                const reponse = await axios.post('https://petstore.swagger.io/v2/user/createWithList', listData);
+                console.log(reponse);
+                
+            }catch(e){
+                console.log(e);
+            }
+        }
+    }
+
     return (
         <Box sx={{
             height: '98vh',
@@ -25,7 +65,14 @@ const CreateUserList = () => {
                 borderRadius: 5,
                 overflowX: 'scroll'
             }}>
-                <FormCreateuserList />
+                <FormCreateUserList
+                    expanded={expanded}
+                    listCreateUser={listCreateUser}
+                    setExpanded={setExpanded}
+                    setListCreateUser={setListCreateUser}
+                    setButtonSaveData={setButtonSaveData}
+                    buttonSaveData={buttonSaveData}
+                />
             </Box>
 
             <Box sx={{
@@ -35,9 +82,13 @@ const CreateUserList = () => {
                 alignItems: 'flex-end',
             }}>
                 <Button
+                    disabled={buttonSaveData}
                     variant="contained"
                     sx={{
                         marginRight: 2
+                    }}
+                    onClick={() => {
+                        postListUser();
                     }}
                 >
                     Thêm dữ liệu
