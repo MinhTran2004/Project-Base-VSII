@@ -3,11 +3,23 @@ import React, { useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InputFieldUser from "./InputFieldUser";
 import PrimaryButton from "./PrimaryButton";
-import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+
 const FormCreateuserList = () => {
     const [expanded, setExpanded] = React.useState('1');
-    const [listCreateUser, setListCreateUser] = useState([{ index: '1' }, { index: '2' }]);
-    //  { index: '3' }
+    const [listCreateUser, setListCreateUser] = useState([{
+        index: '1',
+        formData: {
+            username: "",
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: "",
+            phone: "",
+            userStatus: "",
+        }
+    }]);
+
     const handleChange = (panel: string) => {
         if (expanded === panel) {
             setExpanded('')
@@ -16,32 +28,47 @@ const FormCreateuserList = () => {
         }
     };
 
-    const [formData, setFormData] = useState({
-        username: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        phone: "",
-        userStatus: "",
-    })
-
-    const handleChangeValue = (name: string, value: string) => {
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+    const handleChangeValue = (index: string, name: string, value: string) => {
+        const updateList = listCreateUser.map((item) =>
+            item.index === index ?
+                { ...item, formData: { ...item.formData, [name]: value } }
+                : item
+        );
+        setListCreateUser(updateList);
     };
 
+    const addFormUser = () => {
+        const index = (listCreateUser.length + 1).toString();
+        setExpanded(index);
+        setListCreateUser([...listCreateUser, {
+            index: index,
+            formData: {
+                username: "",
+                firstname: "",
+                lastname: "",
+                email: "",
+                password: "",
+                phone: "",
+                userStatus: "",
+            }
+        }]);
+    }
 
     return (
-        <Box>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 1.5,
+        }}>
             {listCreateUser.map((item: any) => (
                 <Accordion
                     key={item.index}
                     expanded={expanded === item.index}
                     onChange={() => handleChange(item.index)}
                     sx={{
+                        width: '100%',
                         borderRadius: 2
                     }}>
                     <AccordionSummary
@@ -50,7 +77,11 @@ const FormCreateuserList = () => {
                         id="panel1bh-header"
                     >
                         <Typography component="span" sx={{ width: '33%', flexShrink: 0, fontWeight: 600 }}>
-                            Item {item.index}
+                            {item.formData.email && item.index < listCreateUser.length ?
+                                item.formData.email
+                                :
+                                "Item" + item.index
+                            }
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{
@@ -65,51 +96,63 @@ const FormCreateuserList = () => {
                             gap: 2
                         }}>
                             <InputFieldUser
+                                disabled={Number(item.index) < listCreateUser.length}
                                 title="First Name"
                                 name="firstname"
-                                value={formData.firstName}
+                                value={item.formData.firstname}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập First Name"
+                                index={item.index}
                             />
 
                             <InputFieldUser
+                                disabled={Number(item.index) < listCreateUser.length}
                                 title="Last Name"
                                 name="lastname"
-                                value={formData.lastName}
+                                value={item.formData.lastname}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập Last Name"
+                                index={item.index}
                             />
 
                             <InputFieldUser
+                                disabled={Number(item.index) < listCreateUser.length}
                                 title="Username"
                                 name="username"
-                                value={formData.username}
+                                value={item.formData.username}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập username"
+                                index={item.index}
                             />
 
                             <InputFieldUser
+                                disabled={Number(item.index) < listCreateUser.length}
                                 title="Phone"
                                 name="phone"
-                                value={formData.phone}
+                                value={item.formData.phone}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập phone"
+                                index={item.index}
                             />
 
                             <InputFieldUser
+                                disabled={Number(item.index) < listCreateUser.length}
                                 title="Email"
                                 name="email"
-                                value={formData.email}
+                                value={item.formData.email}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập email"
+                                index={item.index}
                             />
 
                             <InputFieldUser
+                                disabled={Number(item.index) < listCreateUser.length}
                                 title="Password"
                                 name="password"
-                                value={formData.password}
+                                value={item.formData.password}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập password"
+                                index={item.index}
                             />
                         </Box>
 
@@ -119,20 +162,23 @@ const FormCreateuserList = () => {
                             <PrimaryButton
                                 label="Lưu dữ liệu"
                                 onPress={() => {
-                                    console.log(formData.email);
+                                    console.log(Number(item.index), item.formData.email);
                                 }}
                                 styleButton={{
                                     padding: ' 10px 20px '
                                 }}
                             />
                         </Box>
-
                     </AccordionDetails>
                 </Accordion>
             ))}
 
-            <Button variant="outlined" startIcon={<DeleteIcon />}>
-                Delete
+            <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => addFormUser()}
+            >
+                Thêm ô nhập
             </Button>
 
         </Box>

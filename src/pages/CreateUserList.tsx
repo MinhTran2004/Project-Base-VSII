@@ -1,9 +1,11 @@
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import FormCreateuserList from "../components/FormCreateUserList";
 
 const CreateUserList = () => {
     return (
-        <Box>
+        <Box sx={{
+            height: '98vh',
+        }}>
             <Typography
                 sx={{
                     fontSize: 30,
@@ -16,13 +18,30 @@ const CreateUserList = () => {
             </Typography>
 
             <Box sx={{
-                height: '87vh',
+                height: '75vh',
                 backgroundColor: '#f2f2f2',
-                margin: '20px',
+                margin: 2,
                 padding: '20px 25px 0',
-                borderRadius: 5
+                borderRadius: 5,
+                overflowX: 'scroll'
             }}>
                 <FormCreateuserList />
+            </Box>
+
+            <Box sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+            }}>
+                <Button
+                    variant="contained"
+                    sx={{
+                        marginRight: 2
+                    }}
+                >
+                    Thêm dữ liệu
+                </Button>
             </Box>
 
         </Box>

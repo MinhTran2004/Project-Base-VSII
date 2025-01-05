@@ -4,8 +4,10 @@ import React from "react";
 interface Props {
     title?: string,
     name: string,
+    disabled?: boolean,
+    index: string,
     value?: string,
-    onChange: (name: string, value: string) => void,
+    onChange: (index: string, name: string, value: string) => void,
     placeholder?: string,
     inputRef?: React.RefObject<HTMLInputElement>,
     textError?: string,
@@ -20,13 +22,14 @@ const InputFieldUser = (props: Props) => {
             flexDirection: 'column',
             gap: '4px',
         }}>
-            <FormLabel sx={{ fontWeight: 600 }}>{props.title}</FormLabel>
+            <FormLabel sx={{ fontWeight: 600, color: 'black' }}>{props.title}</FormLabel>
             <TextField
+                disabled={props.disabled}
                 placeholder={props.placeholder}
                 fullWidth
                 inputRef={props.inputRef}
                 value={props.value}
-                onChange={(e) => props.onChange(props.name, e.target.value)}
+                onChange={(e) => props.onChange(props.index, props.name, e.target.value)}
                 sx={{
                     backgroundColor: '#F3F3F3',
                     borderRadius: '10px',
