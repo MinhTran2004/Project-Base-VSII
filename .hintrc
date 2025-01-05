@@ -10,6 +10,7 @@
       {
         "image-alt": "off"
       }
-    ]
+    ],
+    "detect-css-reflows/composite": "off"
   }
 }

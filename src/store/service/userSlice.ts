@@ -31,9 +31,8 @@ const userSlice = createSlice({
             })
             .addCase(getUserByUserName.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string; // Lỗi
+                state.error = action.payload as string;
             });
-
 
         builder
             .addCase(addUser.pending, (state) => {
@@ -46,7 +45,7 @@ const userSlice = createSlice({
             })
             .addCase(addUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string; // Lỗi
+                state.error = action.payload as string;
             });
 
         builder

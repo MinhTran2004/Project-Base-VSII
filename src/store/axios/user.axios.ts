@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IApiResponse, IUser } from "../../types/types";
 import axios from "axios";
-const baseUrl = "https://petstore.swagger.io/v2/user"
 
+const baseUrl = "https://petstore.swagger.io/v2/user"
 
 export const addUser = createAsyncThunk<IApiResponse, IUser>(
     "user/addUser",
@@ -12,7 +12,7 @@ export const addUser = createAsyncThunk<IApiResponse, IUser>(
             if (response.status !== 200) {
                 throw new Error(response.data.message || "Failed to add user");
             }
-            return response.data as IApiResponse;
+            return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data as IApiResponse);
         }
