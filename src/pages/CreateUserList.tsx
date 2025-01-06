@@ -1,11 +1,23 @@
 import { Box, Button, Typography } from "@mui/material"
 import FormCreateUserList from "../components/FormCreateUserList";
 import axios from 'axios';
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { getErrorMessage } from "../utils/http-status-code";
+import { useNavigate } from "react-router-dom";
 
 const CreateUserList = () => {
+    const navigate = useNavigate();
+
     const [expanded, setExpanded] = React.useState('1');
     const [buttonSaveData, setButtonSaveData] = useState(true);
+    const refListCreateUser = useRef([{
+        refUsername: '',
+        refFirstName: '',
+        refLastName: '',
+        refEmail: '',
+        refPassword: '',
+        refPhone: '',
+    }])
     const [listCreateUser, setListCreateUser] = React.useState([{
         index: '1',
         formData: {
@@ -27,6 +39,7 @@ const CreateUserList = () => {
         }
     }]);
 
+
     const postListUser = async () => {
         const checkListUser = listCreateUser.every((item) => {
             const formData = item.formData;
@@ -41,10 +54,12 @@ const CreateUserList = () => {
             });
 
             try {
-                const reponse = await axios.post(`https://petstore.swagger.io/v2/user/createWithList/hihihi`, listData);
+                const reponse = await axios.post(`https://petstore.swagger.io/v2/user/createWithList/hihi`, listData);
                 console.log(reponse);
-            } catch (e) {
-                console.log(e);
+
+            } catch (e: any) {
+                alert(e.message);
+                getErrorMessage(e.status.toString(), navigate);
             }
         }
 
@@ -75,6 +90,7 @@ const CreateUserList = () => {
             }}>
                 <FormCreateUserList
                     expanded={expanded}
+                    // refListCreateUser={refListCreateUser.current}
                     listCreateUser={listCreateUser}
                     setExpanded={setExpanded}
                     setListCreateUser={setListCreateUser}

@@ -37,7 +37,7 @@ export const initUser: IUser = {
     email: "",
     password: "",
     phone: "",
-    userStatus: Status.PENDING,
+    userStatus: 0,
 };
 
 export const initOrder: IOrder = {
