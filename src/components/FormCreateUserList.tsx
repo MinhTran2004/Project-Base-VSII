@@ -14,12 +14,14 @@ interface ListCreateUser {
         password: string,
         phone: string,
         userStatus: number,
-        errorUserName?: string,
-        errorFirstName?: string,
-        errorLastName?: string,
-        errorEmail?: string,
-        errorPassword?: string,
-        errorPhone?: string,
+    },
+    textError: {
+        errorUserName: string,
+        errorFirstName: string,
+        errorLastName: string,
+        errorEmail: string,
+        errorPassword: string,
+        errorPhone: string,
     }
 }
 
@@ -29,91 +31,96 @@ interface Props {
     setExpanded: (text: string) => void,
     setListCreateUser: (text: ListCreateUser[]) => void,
     setButtonSaveData: (status: boolean) => void,
-    buttonSaveData: boolean
+    buttonSaveData: boolean,
+
 }
 
 const FormCreateUserList = (props: Props) => {
     let check = true;
 
     const checkInputData = (index: string) => {
-        const formData = props.listCreateUser[Number(index) - 1].formData;
+        const indexData = props.listCreateUser.findIndex((item) => item.index === index);
+        const listData = props.listCreateUser.filter((item) => item.index === index)[0];
 
-        const username = formData.username.toString().trim();
-        const firstname = formData.firstName.toString().trim();
-        const lastname = formData.lastName.toString().trim();
-        const email = formData.email.toString().trim();
-        const password = formData.password.toString().trim();
-        const phone = formData.phone.toString().trim();
+        const username = listData.formData.username.toString().trim();
+        const firstname = listData.formData.firstName.toString().trim();
+        const lastname = listData.formData.lastName.toString().trim();
+        const email = listData.formData.email.toString().trim();
+        const password = listData.formData.password.toString().trim();
+        const phone = listData.formData.phone.toString().trim();
 
         const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         const regexPhone = /^(0[1-9]{1})[0-9]{8}$/;
 
         if (firstname) {
-            formData.errorFirstName = "";
+            listData.textError.errorFirstName = "";
         } else {
-            formData.errorFirstName = "Không để trống ô nhập";
+            listData.textError.errorFirstName = "Không để trống ô nhập";
             check = false;
         }
 
         if (lastname) {
-            formData.errorLastName = "";
+            listData.textError.errorLastName = "";
         } else {
-            formData.errorLastName = "Không để trống ô nhập";
+            listData.textError.errorLastName = "Không để trống ô nhập";
             check = false;
 
         }
 
         if (username) {
-            formData.errorUserName = "";
+            listData.textError.errorUserName = "";
         } else {
-            formData.errorUserName = "Không để trống ô nhập";
+            listData.textError.errorUserName = "Không để trống ô nhập";
             check = false;
         }
 
         if (phone) {
             if (!regexPhone.test(phone)) {
-                formData.errorPhone = "Vui lòng nhập đúng định dạng số điện thoại";
+                listData.textError.errorPhone = "Vui lòng nhập đúng định dạng số điện thoại";
                 check = false;
             } else {
-                formData.errorPhone = "";
+                listData.textError.errorPhone = "";
             }
         } else {
-            formData.errorPhone = "Không để trống ô nhập";
+            listData.textError.errorPhone = "Không để trống ô nhập";
             check = false;
         }
 
         if (email) {
             if (!regexEmail.test(email)) {
-                formData.errorEmail = 'Không đúng định dạnh Email !!!';
+                listData.textError.errorEmail = 'Không đúng định dạnh Email !!!';
                 check = false;
             } else {
-                formData.errorEmail = '';
+                listData.textError.errorEmail = '';
             }
         } else {
-            formData.errorEmail = 'Không để trống ô nhập';
+            listData.textError.errorEmail = 'Không để trống ô nhập';
             check = false;
         }
 
         if (password) {
             if (password.length < 6 || password.length > 10) {
-                formData.errorPassword = "Độ dài ký tự từ 6 > 10";
+                listData.textError.errorPassword = "Độ dài ký tự từ 6 > 10";
             } else {
-                formData.errorPassword = "";
+                listData.textError.errorPassword = "";
             }
         } else {
-            formData.errorPassword = "Không để trống ô nhập";
+            listData.textError.errorPassword = "Không để trống ô nhập";
             check = false;
         }
 
         const updatedList = [...props.listCreateUser];
-        updatedList[Number(index) - 1] = {
-            ...updatedList[Number(index) - 1],
-            formData: { ...formData }
+        updatedList[indexData] = {
+            ...updatedList[indexData],
+            textError: { ...listData.textError }
         };
 
         props.setListCreateUser(updatedList);
+        if (check) {
+            props.setButtonSaveData(false);
+        }
         return check;
-    }
+    };
 
     const handleChange = (panel: string) => {
         if (props.expanded === panel) {
@@ -133,37 +140,46 @@ const FormCreateUserList = (props: Props) => {
     };
 
     const addFormUser = () => {
-        const index = (props.listCreateUser.length + 1).toString();
+        const index = (Number(props.listCreateUser[props.listCreateUser.length - 1].index) + 1).toString();
+
         props.setExpanded(index);
         props.setListCreateUser([...props.listCreateUser, {
             index: index,
             formData: {
-                username: "",
-                firstName: "",
-                lastName: "",
-                email: "",
+                username: "minh",
+                firstName: "minh",
+                lastName: "minh",
+                email: "tranminh209204@gmail.com",
                 password: "",
-                phone: "",
+                phone: "0987654321",
                 userStatus: 0,
+            },
+            textError: {
+                errorUserName: '',
+                errorFirstName: '',
+                errorLastName: '',
+                errorEmail: '',
+                errorPassword: '',
+                errorPhone: '',
             }
         }]);
         props.setButtonSaveData(true);
     }
 
-    const deleteForm = () => {
-        const index = (props.listCreateUser.length - 1).toString();
-        props.setExpanded(index);
+    const deleteForm = (indexDelete: string) => {
+        if (props.listCreateUser.length > 1) {
+            const indexDataDelete = props.listCreateUser.findIndex((item) => item.index === indexDelete);
+            if (indexDataDelete !== -1) {
+                const updatedList = [...props.listCreateUser];
+                updatedList.splice(indexDataDelete, 1);
+                props.setListCreateUser(updatedList);
+                props.setButtonSaveData(true);
+                props.setExpanded((Number(props.expanded) - 1).toString());
+            }
+        } else {
+            alert('Cần có nhiều hơn 1 form data mới có thể xóa');
+        }
     }
-
-    // useEffect(() => {
-    check = props.listCreateUser.every((item) => {
-        const formData = item.formData;
-        return Object.values(formData).every(value =>
-            value !== null && value !== undefined && value !== ""
-        );
-    });
-    console.log(check);
-    // }, [check])
 
     return (
         <Box sx={{
@@ -188,7 +204,7 @@ const FormCreateUserList = (props: Props) => {
                         id="panel1bh-header"
                     >
                         <Typography component="span" sx={{ width: '33%', flexShrink: 0, fontWeight: 600 }}>
-                            {item.formData.email && item.index < props.listCreateUser.length ?
+                            {item.formData.email ?
                                 item.formData.email
                                 :
                                 "Item " + item.index
@@ -210,10 +226,10 @@ const FormCreateUserList = (props: Props) => {
                                 disabled={Number(item.index) < props.listCreateUser.length}
                                 title="First Name"
                                 name="firstName"
-                                value={item.formData.firstname}
+                                value={item.formData.firstName}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập First Name"
-                                textError={item.formData.errorFirstName}
+                                textError={item.textError.errorFirstName}
                                 index={item.index}
                             />
 
@@ -221,10 +237,10 @@ const FormCreateUserList = (props: Props) => {
                                 disabled={Number(item.index) < props.listCreateUser.length}
                                 title="Last Name"
                                 name="lastName"
-                                value={item.formData.lastname}
+                                value={item.formData.lastName}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập Last Name"
-                                textError={item.formData.errorLastName}
+                                textError={item.textError.errorLastName}
                                 index={item.index}
                             />
 
@@ -235,7 +251,7 @@ const FormCreateUserList = (props: Props) => {
                                 value={item.formData.username}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập username"
-                                textError={item.formData.errorUserName}
+                                textError={item.textError.errorUserName}
                                 index={item.index}
                             />
 
@@ -246,7 +262,7 @@ const FormCreateUserList = (props: Props) => {
                                 value={item.formData.phone}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập phone"
-                                textError={item.formData.errorPhone}
+                                textError={item.textError.errorPhone}
                                 index={item.index}
                             />
 
@@ -257,7 +273,7 @@ const FormCreateUserList = (props: Props) => {
                                 value={item.formData.email}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập email"
-                                textError={item.formData.errorEmail}
+                                textError={item.textError.errorEmail}
                                 index={item.index}
                             />
 
@@ -268,7 +284,7 @@ const FormCreateUserList = (props: Props) => {
                                 value={item.formData.password}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập password"
-                                textError={item.formData.errorPassword}
+                                textError={item.textError.errorPassword}
                                 index={item.index}
                             />
                         </Box>
@@ -277,13 +293,13 @@ const FormCreateUserList = (props: Props) => {
                             display: 'flex',
                             textAlign: 'end',
                             justifyContent: 'flex-end',
-                            gap: 1,                            
+                            gap: 1,
                         }}>
                             <PrimaryButton
                                 label="Xóa bảng"
                                 disabled={Number(props.expanded) !== props.listCreateUser.length}
                                 onPress={() => {
-                                    deleteForm();
+                                    deleteForm(item.index);
                                 }}
                                 styleButton={{
                                     padding: ' 10px 20px '
@@ -292,10 +308,9 @@ const FormCreateUserList = (props: Props) => {
 
                             <PrimaryButton
                                 label="Lưu dữ liệu"
-                                disabled={Number(props.expanded) !== props.listCreateUser.length || !check}
+                                disabled={Number(props.expanded) !== props.listCreateUser.length}
                                 onPress={() => {
                                     checkInputData(item.index);
-                                    props.setButtonSaveData(false);
                                 }}
                                 styleButton={{
                                     padding: ' 10px 20px '

@@ -16,15 +16,23 @@ const CreateUserList = () => {
             password: "123456",
             phone: "0987654321",
             userStatus: 0,
+        },
+        textError: {
+            errorUserName: '',
+            errorFirstName: '',
+            errorLastName: '',
+            errorEmail: '',
+            errorPassword: '',
+            errorPhone: '',
         }
     }]);
 
     const postListUser = async () => {
         const checkListUser = listCreateUser.every((item) => {
             const formData = item.formData;
-            return Object.values(formData).every(value => 
+            return Object.values(formData).every(value =>
                 value !== null && value !== undefined && value !== ""
-              );
+            );
         });
 
         if (checkListUser) {
@@ -32,14 +40,14 @@ const CreateUserList = () => {
                 return item.formData;
             });
 
-            try{
-                const reponse = await axios.post('https://petstore.swagger.io/v2/user/createWithList', listData);
+            try {
+                const reponse = await axios.post(`https://petstore.swagger.io/v2/user/createWithList/hihihi`, listData);
                 console.log(reponse);
-                
-            }catch(e){
+            } catch (e) {
                 console.log(e);
             }
         }
+
     }
 
     return (
@@ -58,12 +66,12 @@ const CreateUserList = () => {
             </Typography>
 
             <Box sx={{
-                height: '75vh',
+                height: '78vh',
                 backgroundColor: '#f2f2f2',
                 margin: 2,
                 padding: '20px 25px 0',
                 borderRadius: 5,
-                overflowX: 'scroll'
+                overflowX: 'scroll',
             }}>
                 <FormCreateUserList
                     expanded={expanded}
