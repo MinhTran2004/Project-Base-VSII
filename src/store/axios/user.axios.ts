@@ -1,17 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IApiResponse, IUser } from "../../types/types";
-import axios from "axios";
+import { api } from "./config.axios";
 
-const baseUrl = "https://petstore.swagger.io/v2/user"
-
-export const addUser = createAsyncThunk<IApiResponse, IUser>(
+export const addUser = createAsyncThunk<IApiResponse, IUser, { rejectValue: IApiResponse }>(
     "user/addUser",
     async (userData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${baseUrl}`, userData);
-            if (response.status !== 200) {
-                throw new Error(response.data.message || "Failed to add user");
-            }
+            const response = await api.post(`user`, userData);
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data as IApiResponse);
@@ -20,30 +15,23 @@ export const addUser = createAsyncThunk<IApiResponse, IUser>(
 );
 
 
-export const updateUser = createAsyncThunk<IApiResponse, Partial<IUser>>(
+export const updateUser = createAsyncThunk<IApiResponse, Partial<IUser>, { rejectValue: IApiResponse }>(
     "user/updateUser",
     async (userData, { rejectWithValue }) => {
         try {
-            const response = await axios.put(`${baseUrl}/${userData.username}`, userData);
-
-            if (response.status !== 200) {
-                throw new Error(response.data.message || "Failed to add user");
-            }
-            return response.data as IApiResponse;
+            const response = await api.put(`user/${userData.username}`, userData);
+            return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data as IApiResponse);
         }
     }
 );
 
-export const getUserByUserName = createAsyncThunk<IUser, string>(
+export const getUserByUserName = createAsyncThunk<IUser, string, { rejectValue: IApiResponse }>(
     "user/getUserByUsername",
     async (username, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${baseUrl}/${username}`)
-            if (response.status !== 200) {
-                throw new Error(response.data.message || "Failed to add user");
-            }
+            const response = await api.get(`user/${username}`)
             return response.data as IUser
         } catch (error: any) {
             return rejectWithValue(error.response?.data as IApiResponse);

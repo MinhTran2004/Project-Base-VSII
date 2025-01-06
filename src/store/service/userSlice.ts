@@ -5,7 +5,7 @@ import { addUser, getUserByUserName, updateUser } from "../axios/user.axios";
 interface UserState {
     user: IApiResponse | IUser | null
     loading: boolean;
-    error: string | null;
+    error: IApiResponse | null;
 }
 
 const initialState: UserState = {
@@ -31,7 +31,7 @@ const userSlice = createSlice({
             })
             .addCase(getUserByUserName.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string;
+                state.error = action.payload as IApiResponse;
             });
 
         builder
@@ -45,7 +45,7 @@ const userSlice = createSlice({
             })
             .addCase(addUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string;
+                state.error = action.payload as IApiResponse;
             });
 
         builder
@@ -59,7 +59,7 @@ const userSlice = createSlice({
             })
             .addCase(updateUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string;
+                state.error = action.payload as IApiResponse;
             });
     },
 })
