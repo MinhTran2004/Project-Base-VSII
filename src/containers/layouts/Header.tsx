@@ -6,7 +6,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import LogoPc from "../../assets/image/logo-pc.png";
 import LogoMb from "../../assets/image/Frame 427318179.png";
-
+import Cookies from "js-cookie";
+import UserData from "../../auth/UserData";
 const pages: string[] = [
   "Bán",
   "Cho Thuê",
@@ -17,6 +18,7 @@ const pages: string[] = [
 ];
 
 export const Header: React.FC = () => {
+  const sessionId = Cookies.get("sessionId");
   return (
     <AppBar
       position="static"
@@ -46,6 +48,7 @@ export const Header: React.FC = () => {
               </Button>
             ))}
           </Box>
+          {sessionId && <UserData />}
         </Toolbar>
       </Container>
     </AppBar>
