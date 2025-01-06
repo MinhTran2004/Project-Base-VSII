@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Box, Button, Typography, Link, Stack } from "@mui/material";
 
 import { useLoginMutation } from "../store/service/api";
@@ -12,12 +12,12 @@ import CustomTextField from "../components/CustomTextField";
 import CustomTextFieldWithtoggle from "../components/CustomTextFieldWithtoggle";
 
 // Định nghĩa kiểu cho các state
-interface LoginFormState {
-  username: string;
-  password: string;
-  showPassword: boolean;
-  err: string;
-}
+// interface LoginFormState {
+//   username: string;
+//   password: string;
+//   showPassword: boolean;
+//   err: string;
+// }
 
 export default function LoginForm() {
   const [username, setUsername] = useState<string>("");
@@ -74,7 +74,7 @@ export default function LoginForm() {
         Đăng nhập
       </Typography>
       <Typography variant="body2" mb={3}>
-        Đăng nhập bằng email mà bạn đã đăng ký với chúng tôi.
+        Đăng nhập bằng SĐT mà bạn đã đăng ký với chúng tôi.
       </Typography>
       <Stack spacing={3}>
         <CustomTextField

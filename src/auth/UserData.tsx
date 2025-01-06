@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Stack } from "@mui/material";
+import { Avatar, Button, Stack } from "@mui/material";
 import React, { useState } from "react";
 import ConfirmLogout from "./ConfirmLogout";
 

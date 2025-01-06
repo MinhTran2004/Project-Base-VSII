@@ -94,7 +94,7 @@ export const api = createApi({
       transformResponse: (response: LoginResponse) => {
         const sessionId = response.message.split(":")[1];
         const loginTime = new Date();
-        const expiresAfter = new Date(loginTime.getTime() + 10 * 60 * 1000);
+        const expiresAfter = new Date(loginTime.getTime() + 30 * 1000);
         const expirationTime = expiresAfter.getTime();
 
         setCookieWithExpiration("sessionId", sessionId, expiresAfter);

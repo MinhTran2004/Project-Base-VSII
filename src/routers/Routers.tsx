@@ -6,7 +6,6 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
 
-// Kiểu cho SwitchRoutes component
 const SwitchRoutes: React.FC = () => {
   return (
     <Routes>
