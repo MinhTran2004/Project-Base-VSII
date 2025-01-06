@@ -1,16 +1,31 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Routes from "./routers/Routers";
 import { getCookie } from "./utils/getCookie";
 import { deleteCookie } from "./utils/deleteCookie";
-import { expireSession, setSession } from "./store/slice/sessionSlice";
-import { useEffect, useState } from "react";
+import { expireSession } from "./store/slice/sessionSlice";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "./store/store";
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const [timeLeft, setTimeLeft] = useState<number | null>(null); // state có thể là số hoặc null
+
+  // Lấy trạng thái lỗi từ Redux
+  const { redirectToErrorPage } = useSelector(
+    (state: RootState) => state.error
+  );
+
+  useEffect(() => {
+    if (redirectToErrorPage) {
+      // Khi có lỗi và cần điều hướng, điều hướng đến trang lỗi
+      navigate("/error");
+      // Clear trạng thái lỗi sau khi đã điều hướng
+      // dispatch(clearError());
+    }
+  }, [redirectToErrorPage, navigate, dispatch]);
 
   useEffect(() => {
     const sessionId = getCookie("sessionId");

@@ -5,6 +5,7 @@ import LoginPage from "../pages/LoginPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import HomePage from "../pages/HomePage";
 import NotFoundPage from "../pages/NotFoundPage";
+import ErrorPage from "../pages/ErrorPage";
 
 const SwitchRoutes: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const SwitchRoutes: React.FC = () => {
         }
       />
       <Route path="/not-found" element={<NotFoundPage />} />
+      <Route path="/error" element={<ErrorPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

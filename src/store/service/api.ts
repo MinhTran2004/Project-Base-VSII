@@ -8,6 +8,7 @@ import setCookieWithExpiration from "../../utils/setCookieWithExpiration";
 import { deleteCookie } from "../../utils/deleteCookie";
 import { expireSession } from "../slice/sessionSlice";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import { handleError } from "../../utils/handleError";
 interface LoginCredentials {
   username: string;
   password: string;
@@ -33,11 +34,8 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args: any, api: BaseQueryApi, extraOptions: any) => {
   const result = await baseQuery(args, api, extraOptions);
 
-  if (result.error && result.error.status === 401) {
-    // Nếu lỗi 401, xóa cookie và dispatch expireSession
-    deleteCookie("sessionId");
-    deleteCookie("expiresAfter");
-    api.dispatch(expireSession());
+  if (result.error) {
+    handleError(result.error, api);
   }
 
   return result;

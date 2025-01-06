@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { api } from "./service/api";
 import sessionReducer from "./slice/sessionSlice";
+import errorReducer from "./slice/errorSlice";
 const rootReducer = combineReducers({
   session: sessionReducer,
+  error: errorReducer,
   [api.reducerPath]: api.reducer,
 });
 export const store = configureStore({
