@@ -1,9 +1,10 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import ordersReducer from './slices/ordersSlice';
-
+import authReducer from './slices/authSlice'
 export const store = configureStore({
     reducer:{
         orders:ordersReducer,
+        auth:authReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

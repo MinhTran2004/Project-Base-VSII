@@ -3,7 +3,7 @@ import axiosInstance from '../../configs/axiosConfig'; // Import instance từ a
 import { IOrder, HttpError } from '../../types/types';
 
 // Thunk để tạo order mới
-export const createOrderThunk = createAsyncThunk<IOrder, IOrder, { rejectValue: HttpError }>(
+export const createOrderThunk = createAsyncThunk<IOrder, Omit<IOrder, 'id'>, { rejectValue: HttpError }>(
   'order/createOrder',
   async (orderData, { rejectWithValue }) => {
     try {
@@ -40,7 +40,7 @@ export const fetchOrderThunk = createAsyncThunk<IOrder, string, { rejectValue: H
 );
 
 // Thunk để place order
-export const placeOrderThunk = createAsyncThunk<IOrder, IOrder, { rejectValue: HttpError }>(
+export const placeOrderThunk = createAsyncThunk<IOrder, Omit<IOrder, 'id'>, { rejectValue: HttpError }>(
   'order/place',
   async (orderData, { rejectWithValue }) => {
     try {

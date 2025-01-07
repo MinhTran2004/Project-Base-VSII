@@ -1,6 +1,8 @@
+import PlaceOrder from "./PlaceOrder"
+
 const HomePage = () => {
   return (
-    <div>HomePage</div>
+    <PlaceOrder/>
   )
 }
 
