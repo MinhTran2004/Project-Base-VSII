@@ -1,40 +1,41 @@
-// import { Autocomplete, TextField } from "@mui/material";
-// import React, { useState } from "react";
-// import useDebounce from "../../hooks/useDebounce";
+import { Button, TextField, Tooltip, Typography } from "@mui/material";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { SearchStyle } from "./styled";
+import { useRef } from "react";
 
-// const SearchInput = (propsData) => {
-//   const [inputValue, setInputValue] = useState<string>("");
-//   const debounceValue = useDebounce<string>(inputValue, 500);
-//   return (
-//     <Autocomplete
-//       freeSolo
-//       fullWidth
-//       disableClearable
-//       sx={{ display: { xs: "none", xl: "block" } }}
-//       options={productList}
-//       onChange={(_, option) =>
-//         data?.map((product) => {
-//           if (product.title === option) {
-//             window.location.href = `/products/${product.id}`;
-//           }
-//         })
-//       }
-//       renderInput={(params) => {
-//         return (
-//           <TextField
-//             {...params}
-//             label="Tìm kiếm sản phẩm..."
-//             onChange={handleChangeInput}
-//             InputProps={{
-//               ...params.InputProps,
-//               type: "search",
-//             }}
-//             inputRef={htmlRef}
-//           />
-//         );
-//       }}
-//     />
-//   );
-// };
+const SearchInput = ({
+  errMess,
+  handleChangInput,
+}: {
+  errMess: string;
+  handleChangInput: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => false | undefined;
+}) => {
+  const htmlRef = useRef<HTMLDivElement>(null);
+  const onFocus = () => {
+    if (htmlRef.current) {
+      htmlRef.current.focus();
+    }
+  };
+  return (
+    <SearchStyle>
+      <TextField
+        sx={{ mr: "0.5rem", width: "30%" }}
+        autoFocus
+        size="small"
+        onChange={handleChangInput}
+        placeholder="Search pet by Id..."
+        error={errMess.length ? true : false}
+        helperText={errMess}
+        inputRef={htmlRef}
+      />
 
-// export default SearchInput;
+      <Button variant="contained" onClick={onFocus}>
+        <SearchOutlinedIcon />
+      </Button>
+    </SearchStyle>
+  );
+};
+
+export default SearchInput;
