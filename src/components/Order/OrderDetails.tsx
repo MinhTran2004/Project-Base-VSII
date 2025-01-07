@@ -16,7 +16,15 @@ interface OrderDetailsProps {
 
 const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
     return (
-        <Paper elevation={3} sx={{ mt: 2, p: 2 }}>
+        <Paper
+            elevation={3}
+            sx={{
+                mt: 2,
+                p: 2,
+                backgroundColor: "#FFEBEE",
+                border: "1px solid #F44336",
+            }}
+        >
             <Typography variant="h5" gutterBottom>
                 Chi tiết đơn hàng
             </Typography>
