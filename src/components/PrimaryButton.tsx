@@ -15,6 +15,7 @@ const PrimaryButton: React.FC<Props> = (props) => {
         <Button variant="text"
             disabled={props.disabled}
             sx={{
+                width: '100%',
                 fontSize: 16,
                 backgroundColor: '#FFA21A',
                 padding: '11px 20px 11px 20px',
@@ -24,6 +25,9 @@ const PrimaryButton: React.FC<Props> = (props) => {
                 fontFamily: 'Inter',
                 ...props.styleButton,
                 ...props.styleText,
+                '@media (max-width:440px)': {
+                    fontSize: 12,
+                },
             }}
             startIcon={props.icon}
             onClick={props.onPress}>

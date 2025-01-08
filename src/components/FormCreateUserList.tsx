@@ -56,14 +56,14 @@ const FormCreateUserList = (props: Props) => {
         refPhone: '',
     })
 
-    const checkNullField = (indexData: number, listData:ListCreateUser) => {
-            const updatedList = [...props.listCreateUser];
-            updatedList[indexData] = {
-                ...updatedList[indexData],
-                textError: { ...listData.textError }
-            };
-            props.setListCreateUser(updatedList);
-            refInput.current.refFirstName.current?.focus();
+    const checkNullField = (indexData: number, listData: ListCreateUser) => {
+        const updatedList = [...props.listCreateUser];
+        updatedList[indexData] = {
+            ...updatedList[indexData],
+            textError: { ...listData.textError }
+        };
+        props.setListCreateUser(updatedList);
+        refInput.current.refFirstName.current?.focus();
     };
 
     const checkInputData = (index: string) => {
@@ -246,11 +246,16 @@ const FormCreateUserList = (props: Props) => {
             {props.listCreateUser.map((item: any) => (
                 <Accordion
                     key={item.index}
+                    disableGutters
                     expanded={props.expanded === item.index}
                     onChange={() => handleChange(item.index)}
                     sx={{
                         width: '100%',
-                        borderRadius: 2
+                        borderRadius: 2,
+                        '& .css-s1wtk5': {
+                            backgroundColor: 'red',
+                            margin: 20
+                        }
                     }}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -345,10 +350,18 @@ const FormCreateUserList = (props: Props) => {
                         </Box>
 
                         <Box sx={{
-                            display: 'flex',
+                            flex: 1,
+                            width: '100%',
+                            display: 'grid',
+                            gridTemplateColumns: 'auto auto',
                             textAlign: 'end',
                             justifyContent: 'flex-end',
+                            alignItems: 'center',
                             gap: 1,
+                            '@media (max-width:440px)': {
+                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                justifyContent: 'space-between',
+                            },
                         }}>
                             <PrimaryButton
                                 label="Xóa bảng"
@@ -357,7 +370,7 @@ const FormCreateUserList = (props: Props) => {
                                     deleteForm(item.index);
                                 }}
                                 styleButton={{
-                                    padding: ' 10px 20px '
+                                    padding: ' 10px 30px ',
                                 }}
                             />
 

@@ -21,6 +21,9 @@ const InputFieldUser = (props: Props) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '4px',
+            '@media (max-width:440px)': {
+                gap: 0,
+            },
         }}>
             <FormLabel sx={{ fontWeight: 600, color: 'black' }}>{props.title}</FormLabel>
             <TextField
@@ -36,6 +39,11 @@ const InputFieldUser = (props: Props) => {
                     '& .MuiOutlinedInput-root': {
                         '& fieldset': {
                             border: 'none',
+                        },
+                    },
+                    '& .MuiInputBase-input': {
+                        '@media (max-width:440px)': {
+                            padding: '10px'
                         },
                     },
                     ...props.styleInput
