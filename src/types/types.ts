@@ -15,9 +15,9 @@ export interface ITag {
 }
 
 export enum Status {
-  AVAILABLE = "Available",
-  PENDING = "Pending",
-  SOLD = "Sold",
+  AVAILABLE = "available",
+  PENDING = "pending",
+  SOLD = "sold",
 }
 
 export interface IPet {

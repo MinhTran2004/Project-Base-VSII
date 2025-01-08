@@ -87,17 +87,7 @@ export const PetTable: React.FC<IPetTableProps> = ({ pets }) => {
         </TableHead>
         <TableBody>
           {pets.length > 0 ? (
-            pets.map((pet) => (
-              //   <TableRow key={pet.id}>
-              //     <TableCell component="th" scope="row">
-              //       {pet.id}
-              //     </TableCell>
-              //     <TableCell>{pet.name}</TableCell>
-              //     <TableCell>{pet.status}</TableCell>
-              //     <TableCell>{pet.category.name}</TableCell>
-              //   </TableRow>
-              <PetRow key={pet.id} pet={pet} />
-            ))
+            pets.map((pet) => <PetRow key={pet.id} pet={pet} />)
           ) : (
             <TableRow>
               <TableCell colSpan={4} align="center">

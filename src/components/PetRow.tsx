@@ -52,9 +52,9 @@ export const PetRow: React.FC<IPetRowProps> = ({ pet }) => {
             lg: "1rem",
           },
           color:
-            pet.status === "Available"
+            pet.status === "available"
               ? "#10d216"
-              : pet.status === "Pending"
+              : pet.status === "pending"
               ? "#faa421"
               : "#f41a0b",
         }}
@@ -71,7 +71,7 @@ export const PetRow: React.FC<IPetRowProps> = ({ pet }) => {
           },
         }}
       >
-        {pet.category.name}
+        {pet?.category?.name}
       </TableCell>
     </TableRow>
   );

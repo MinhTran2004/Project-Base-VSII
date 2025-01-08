@@ -1,56 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import { StatusSelector } from "../components/StatusSelector";
 import { PetTable } from "../components/PetTable";
 import { ActionButton } from "../components/ActionButton";
 import { Loading } from "../components/Loading";
-import { IPet, Status } from "../types/types";
+import { Status } from "../types/types";
+import { isLoggedIn } from "../utils/checkAuthentication";
+import {
+  fetchPetsByStatus,
+  selectPets,
+  selectStatus,
+  selectError,
+} from "../store/slices/petSlice";
 import backgroundImg from "../assets/3.jpg";
+import { AppDispatch } from "../store/store";
+import { useNavigate } from "react-router-dom";
 
 const FindPetsByStatus: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loadingPage, setLoadingPage] = useState<boolean>(true); // Loading page state
-  const fakePets: IPet[] = [
-    {
-      id: 1,
-      name: "Black Widow",
-      status: Status.AVAILABLE,
-      category: { id: 1, name: "Dog" },
-      photoUrl: ["https://1.jpg"],
-      tags: [
-        { id: 1, name: "Cute" },
-        { id: 2, name: "Cute" },
-      ],
-    },
-    {
-      id: 2,
-      name: "Bat Man",
-      status: Status.PENDING,
-      category: { id: 2, name: "Cat" },
-      photoUrl: ["https://2.jpg"],
-      tags: [{ id: 3, name: "Cute" }],
-    },
-    {
-      id: 3,
-      name: "Spider Man",
-      status: Status.SOLD,
-      category: { id: 1, name: "Dog" },
-      photoUrl: ["https://3.jpg"],
-      tags: [{ id: 4, name: "Cute" }],
-    },
-    {
-      id: 4,
-      name: "Captain America",
-      status: Status.AVAILABLE,
-      category: { id: 3, name: "Cat" },
-      photoUrl: ["https://4.jpg"],
-      tags: [{ id: 5, name: "Cute" }],
-    },
-  ];
+  const dispatch = useDispatch<AppDispatch>();
+  const pets = useSelector(selectPets);
+  const status = useSelector(selectStatus);
+  const error = useSelector(selectError);
+  const [loadingPage, setLoadingPage] = useState<boolean>(true);
+  const [selectedStatus, setSelectedStatus] = useState<Status>(
+    Status.AVAILABLE
+  );
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setLoadingPage(false);
+    if (!isLoggedIn()) {
+      navigate("/login");
+    } else {
+      setLoadingPage(false);
+    }
   }, []);
+
+  const fetchPets = async () => {
+    try {
+      await dispatch(fetchPetsByStatus(selectedStatus)).unwrap();
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error("Error:", err.message);
+      } else {
+        console.error("Unexpected error:", err);
+      }
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -83,7 +80,6 @@ const FindPetsByStatus: React.FC = () => {
         ) : (
           <>
             <Typography
-              variant="h3"
               mb={3}
               textAlign="center"
               sx={{
@@ -93,6 +89,9 @@ const FindPetsByStatus: React.FC = () => {
                   md: "2.5rem",
                   lg: "3rem",
                 },
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                color: "#332113",
               }}
             >
               Find Pets by Status
@@ -105,19 +104,23 @@ const FindPetsByStatus: React.FC = () => {
               mb={4}
               justifyContent="center"
             >
-              <StatusSelector />
-              <ActionButton
-                onClick={() => setLoading(!loading)}
-                text="Search"
+              <StatusSelector
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
               />
+              <ActionButton onClick={fetchPets} text="Search" />
             </Box>
 
-            {loading ? (
+            {status === "loading" ? (
               <Box display="flex" justifyContent="center" mt={4}>
                 <CircularProgress />
               </Box>
+            ) : error ? (
+              <Typography color="error" align="center" mt={4}>
+                {error}
+              </Typography>
             ) : (
-              <PetTable pets={fakePets} />
+              <PetTable pets={pets} />
             )}
           </>
         )}

@@ -3,12 +3,18 @@ import React from "react";
 import { Status } from "../types/types";
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
-export const StatusSelector: React.FC = () => {
-  const [selectedStatus, setSelectedStatus] = React.useState<Status>(
-    Status.AVAILABLE
-  );
+interface StatusSelectorProps {
+  selectedStatus: Status;
+  setSelectedStatus: (status: Status) => void;
+}
+
+export const StatusSelector: React.FC<StatusSelectorProps> = ({
+  selectedStatus,
+  setSelectedStatus,
+}) => {
   const handleChange = (event: SelectChangeEvent<Status>) => {
-    setSelectedStatus(event.target.value as Status);
+    const newStatus = event.target.value as Status;
+    setSelectedStatus(newStatus);
   };
 
   return (
