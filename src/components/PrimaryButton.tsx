@@ -15,7 +15,6 @@ const PrimaryButton: React.FC<Props> = (props) => {
         <Button variant="text"
             disabled={props.disabled}
             sx={{
-                width: '100%',
                 fontSize: 16,
                 backgroundColor: '#FFA21A',
                 padding: '11px 20px 11px 20px',

@@ -1,13 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import CreateUserList from "./pages/CreateUserList";
-import ErrorCode404 from "./components/httpcode/ErrorCode404";
+import CreateUserList from "./pages/home/CreateUserList";
+import HttpCodeError from "./components/HttpCodeError";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<CreateUserList />} />
-        <Route path="*" element={<ErrorCode404 />} />
+        <Route path="/*" element={<HttpCodeError />} />
       </Routes>
     </BrowserRouter>
   )

@@ -51,13 +51,15 @@ export const getErrorMessage = (status: string, navigate: any): string => {
         case '400':
             return 'Yêu cầu không hợp lệ. Vui lòng kiểm tra lại dữ liệu.';
         case '401':
+            navigate('/*', { state: { imageError: 'https://sitechecker.pro/wp-content/uploads/2023/06/401-status-code.png' } });
             return 'Bạn cần đăng nhập để thực hiện hành động này.';
         case '402':
             return 'Thanh toán cần thiết (chưa sử dụng phổ biến).';
         case '403':
+            navigate('/*', { state: { imageError: 'https://sitechecker.pro/wp-content/uploads/2023/06/403-status-code.png' } });
             return 'Bạn không có quyền truy cập vào tài nguyên này.';
         case '404':
-            navigate('/*')
+            navigate('/*', { state: { imageError: 'https://sitechecker.pro/wp-content/uploads/2023/06/404-status-code.png' } });
             return 'Không tìm thấy tài nguyên yêu cầu.';
         case '405':
             return 'Phương thức yêu cầu không được phép cho tài nguyên này.';
@@ -112,6 +114,7 @@ export const getErrorMessage = (status: string, navigate: any): string => {
 
         // Mã trạng thái 5xx: Lỗi phía server
         case '500':
+            navigate('/*', { state: { imageError: 'https://sitechecker.pro/wp-content/uploads/2023/08/505-status-code.png' } });
             return 'Lỗi máy chủ nội bộ. Vui lòng thử lại sau.';
         case '501':
             return 'Máy chủ không hỗ trợ tính năng yêu cầu.';

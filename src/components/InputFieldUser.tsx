@@ -5,9 +5,9 @@ interface Props {
     title?: string,
     name: string,
     disabled?: boolean,
-    index: string,
+    index?: number,
     value?: string,
-    onChange: (index: string, name: string, value: string) => void,
+    onChange: ( name: string, value: string, index: number) => void,
     placeholder?: string,
     inputRef?: React.RefObject<HTMLInputElement>,
     textError?: string,
@@ -25,14 +25,14 @@ const InputFieldUser = (props: Props) => {
                 gap: 0,
             },
         }}>
-            <FormLabel sx={{ fontWeight: 600, color: 'black' }}>{props.title}</FormLabel>
+            <FormLabel sx={{ fontWeight: 600,  letterSpacing: 0.5 }}>{props.title}</FormLabel>
             <TextField
                 disabled={props.disabled}
                 placeholder={props.placeholder}
                 fullWidth
                 inputRef={props.inputRef}
                 value={props.value}
-                onChange={(e) => props.onChange(props.index, props.name, e.target.value)}
+                onChange={(e) => props.onChange( props.name, e.target.value, props.index ? props.index : 0)}
                 sx={{
                     backgroundColor: '#F3F3F3',
                     borderRadius: '10px',

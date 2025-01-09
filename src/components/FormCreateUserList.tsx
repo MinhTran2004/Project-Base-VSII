@@ -1,12 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InputFieldUser from "./InputFieldUser";
 import PrimaryButton from "./PrimaryButton";
-import AddIcon from '@mui/icons-material/Add';
 import React, { useRef } from "react";
 
-interface ListCreateUser {
-    index: string,
+export interface ListCreateUser {
     formData: {
         username: string,
         firstName: string,
@@ -23,232 +21,194 @@ interface ListCreateUser {
         errorEmail: string,
         errorPassword: string,
         errorPhone: string,
-    }
-}
-
-interface RefListCreateUser {
-    refUsername: string;
-    refFirstName: string;
-    refLastName: string;
-    refEmail: string;
-    refPassword: string;
-    refPhone: string;
+    },
+    isStatusButton: boolean,
 }
 
 interface Props {
-    expanded: string,
-    // refListCreateUser: RefListCreateUser[],
-    listCreateUser: ListCreateUser[],
-    setExpanded: (text: string) => void,
-    setListCreateUser: (text: ListCreateUser[]) => void,
-    setButtonSaveData: (status: boolean) => void,
-    buttonSaveData: boolean,
+    listDataCreateUser: ListCreateUser[],
+    setListDataCreateUser: (text: ListCreateUser[]) => void,
 }
 
 const FormCreateUserList = (props: Props) => {
-
+    const [expanded, setExpanded] = React.useState(props.listDataCreateUser.length);
+    
     const refInput = useRef({
-        refUsername: '',
+        refUsername: React.createRef<HTMLInputElement>(),
         refFirstName: React.createRef<HTMLInputElement>(),
-        refLastName: '',
-        refEmail: '',
-        refPassword: '',
-        refPhone: '',
+        refLastName: React.createRef<HTMLInputElement>(),
+        refEmail: React.createRef<HTMLInputElement>(),
+        refPassword: React.createRef<HTMLInputElement>(),
+        refPhone: React.createRef<HTMLInputElement>(),
     })
 
-    const checkNullField = (indexData: number, listData: ListCreateUser) => {
-        const updatedList = [...props.listCreateUser];
-        updatedList[indexData] = {
-            ...updatedList[indexData],
+    const checkNullField = (index: number, listData: ListCreateUser) => {
+        const updatedList = [...props.listDataCreateUser];
+        updatedList[index] = {
+            ...updatedList[index],
             textError: { ...listData.textError }
         };
-        props.setListCreateUser(updatedList);
-        refInput.current.refFirstName.current?.focus();
+        props.setListDataCreateUser(updatedList);
     };
 
-    const checkInputData = (index: string) => {
-        let check = true;
+    const checkInputData = (index: number) => {
+        const dataUserByIndex = props.listDataCreateUser[index];
 
-        const indexData = props.listCreateUser.findIndex((item) => item.index === index);
-        const listData = props.listCreateUser.filter((item) => item.index === index)[0];
-
-        const username = listData.formData.username.toString().trim();
-        const firstname = listData.formData.firstName.toString().trim();
-        const lastname = listData.formData.lastName.toString().trim();
-        const email = listData.formData.email.toString().trim();
-        const password = listData.formData.password.toString().trim();
-        const phone = listData.formData.phone.toString().trim();
+        const username = dataUserByIndex.formData.username.toString().trim();
+        const firstname = dataUserByIndex.formData.firstName.toString().trim();
+        const lastname = dataUserByIndex.formData.lastName.toString().trim();
+        const email = dataUserByIndex.formData.email.toString().trim();
+        const password = dataUserByIndex.formData.password.toString().trim();
+        const phone = dataUserByIndex.formData.phone.toString().trim();
 
         const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         const regexPhone = /^(0[1-9]{1})[0-9]{8}$/;
 
         if (firstname) {
-            listData.textError.errorFirstName = "";
+            dataUserByIndex.textError.errorFirstName = "";
         } else {
-            listData.textError.errorFirstName = "Không để trống ô nhập";
-            checkNullField(indexData, listData);
+            dataUserByIndex.textError.errorFirstName = "Không để trống ô nhập";
+            checkNullField(index, dataUserByIndex);
+            refInput.current.refFirstName.current?.focus();
             return false;
         }
 
         if (lastname) {
-            listData.textError.errorLastName = "";
+            dataUserByIndex.textError.errorLastName = "";
         } else {
-            listData.textError.errorLastName = "Không để trống ô nhập";
-            checkNullField(indexData, listData);
+            dataUserByIndex.textError.errorLastName = "Không để trống ô nhập";
+            checkNullField(index, dataUserByIndex);
+            refInput.current.refLastName.current?.focus();
             return false;
         }
 
         if (username) {
-            listData.textError.errorUserName = "";
+            dataUserByIndex.textError.errorUserName = "";
         } else {
-            listData.textError.errorUserName = "Không để trống ô nhập";
-            checkNullField(indexData, listData);
+            dataUserByIndex.textError.errorUserName = "Không để trống ô nhập";
+            checkNullField(index, dataUserByIndex);
+            refInput.current.refUsername.current?.focus();
             return false;
         }
 
         if (phone) {
             if (!regexPhone.test(phone)) {
-                listData.textError.errorPhone = "Vui lòng nhập đúng định dạng số điện thoại";
-                checkNullField(indexData, listData);
+                dataUserByIndex.textError.errorPhone = "Vui lòng nhập đúng định dạng số điện thoại";
+                checkNullField(index, dataUserByIndex);
+                refInput.current.refPhone.current?.focus();
                 return false;
             } else {
-                listData.textError.errorPhone = "";
+                dataUserByIndex.textError.errorPhone = "";
             }
         } else {
-            listData.textError.errorPhone = "Không để trống ô nhập";
-            checkNullField(indexData, listData);
+            dataUserByIndex.textError.errorPhone = "Không để trống ô nhập";
+            checkNullField(index, dataUserByIndex);
+            refInput.current.refPhone.current?.focus();
             return false;
         }
 
         if (email) {
             if (!regexEmail.test(email)) {
-                listData.textError.errorEmail = 'Không đúng định dạnh Email !!!';
-                checkNullField(indexData, listData);
+                dataUserByIndex.textError.errorEmail = 'Không đúng định dạnh Email !!!';
+                checkNullField(index, dataUserByIndex);
+                refInput.current.refEmail.current?.focus();
                 return false;
             } else {
-                listData.textError.errorEmail = '';
+                dataUserByIndex.textError.errorEmail = '';
             }
         } else {
-            listData.textError.errorEmail = 'Không để trống ô nhập';
-            checkNullField(indexData, listData);
+            dataUserByIndex.textError.errorEmail = 'Không để trống ô nhập';
+            checkNullField(index, dataUserByIndex);
+            refInput.current.refEmail.current?.focus();
             return false;
         }
 
         if (password) {
             if (password.length < 6 || password.length > 10) {
-                listData.textError.errorPassword = "Độ dài ký tự từ 6 > 10";
-                checkNullField(indexData, listData);
+                dataUserByIndex.textError.errorPassword = "Độ dài ký tự từ 6 > 10";
+                checkNullField(index, dataUserByIndex);
+                refInput.current.refPassword.current?.focus();
                 return false;
             } else {
-                listData.textError.errorPassword = "";
+                dataUserByIndex.textError.errorPassword = "";
             }
         } else {
-            listData.textError.errorPassword = "Không để trống ô nhập";
-            checkNullField(indexData, listData);
+            dataUserByIndex.textError.errorPassword = "Không để trống ô nhập";
+            checkNullField(index, dataUserByIndex);
+            refInput.current.refPassword.current?.focus();
             return false;
         }
 
-        return { check, indexData, listData };
+        return { index, dataUserByIndex };
     };
 
     // luu form
-    const saveForm = (index: string) => {
+    const updateDataByIndex = (index: number) => {
         const result = checkInputData(index);
+        const dataUserByIndex = [...props.listDataCreateUser];
 
-        if (result !== false) {
-            const updatedList = [...props.listCreateUser];
-            updatedList[result.indexData] = {
-                ...updatedList[result.indexData],
-                textError: { ...result.listData.textError }
-            };
-            props.setListCreateUser(updatedList);
-            props.setButtonSaveData(false);
+        if (props.listDataCreateUser[index].isStatusButton) {
+            const updateDataUser = {
+                ...dataUserByIndex[index],
+                isStatusButton: false,
+            }
+            dataUserByIndex[index] = updateDataUser;
+            props.setListDataCreateUser(dataUserByIndex);
+        } else {
+            if (result !== false) {
+                const updateDataUser = {
+                    ...dataUserByIndex[index],
+                    isStatusButton: true,
+                }
+                dataUserByIndex[index] = updateDataUser;
+                props.setListDataCreateUser(dataUserByIndex);
+            }
         }
-    }
-
-    // them form
-    const addForm = () => {
-        const index = (Number(props.listCreateUser[props.listCreateUser.length - 1].index) + 1).toString();
-        props.setExpanded(index);
-        props.setListCreateUser([...props.listCreateUser, {
-            index: index,
-            formData: {
-                username: "minh",
-                firstName: "minh",
-                lastName: "minh",
-                email: "tranminh209204@gmail.com",
-                password: "123456",
-                phone: "0987654321",
-                userStatus: 0,
-            },
-            textError: {
-                errorUserName: '',
-                errorFirstName: '',
-                errorLastName: '',
-                errorEmail: '',
-                errorPassword: '',
-                errorPhone: '',
-            },
-        }]);
-        // props.refListCreateUser = [...props.refListCreateUser, {
-        //     refUsername: '',
-        //     refFirstName: '',
-        //     refLastName: '',
-        //     refEmail: '',
-        //     refPassword: '',
-        //     refPhone: '',
-        // }]
-        props.setButtonSaveData(true);
     }
 
     // xoa form
-    const deleteForm = (indexDelete: string) => {
-        if (props.listCreateUser.length > 1) {
-            const indexDataDelete = props.listCreateUser.findIndex((item) => item.index === indexDelete);
-            if (indexDataDelete !== -1) {
-                const updatedList = [...props.listCreateUser];
-                updatedList.splice(indexDataDelete, 1);
-                props.setListCreateUser(updatedList);
-                props.setButtonSaveData(true);
-                props.setExpanded((Number(props.expanded) - 1).toString());
-            }
-        } else {
-            alert('Cần có nhiều hơn 1 form data mới có thể xóa');
-        }
+    const deleteForm = (index: number) => {
+        const updateList = [...props.listDataCreateUser];
+        updateList.splice(index, 1);
+        props.setListDataCreateUser(updateList);
     }
 
-
-    const handleChange = (panel: string) => {
-        if (props.expanded === panel) {
-            props.setExpanded('')
-        } else {
-            props.setExpanded(panel);
-        }
+    const handleChangeValue = (name: string, value: string, index: number) => {
+        const dataUserByIndex = [...props.listDataCreateUser];
+        const updateDataUser = {
+            ...dataUserByIndex[index],
+            formData: {
+                ...dataUserByIndex[index].formData,
+                [name]: value
+            },
+        };
+        dataUserByIndex[index] = updateDataUser;
+        props.setListDataCreateUser(dataUserByIndex);
     };
 
-    const handleChangeValue = (index: string, name: string, value: string) => {
-        const updateList = props.listCreateUser.map((item) =>
-            item.index === index ?
-                { ...item, formData: { ...item.formData, [name]: value } }
-                : item
-        );
-        props.setListCreateUser(updateList);
+    const handleChange = (index: number) => {
+        if (props.listDataCreateUser[expanded].isStatusButton) {
+            setExpanded(index);
+        } else {
+            alert('Vui lòng lưu dữ liệu');
+        }
     };
 
     return (
         <Box sx={{
             display: 'flex',
+            width: '100%',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             gap: 1.5,
         }}>
-            {props.listCreateUser.map((item: any) => (
+            {props.listDataCreateUser.map((item: any, index) => (
                 <Accordion
-                    key={item.index}
+                    key={index}
                     disableGutters
-                    expanded={props.expanded === item.index}
-                    onChange={() => handleChange(item.index)}
+                    expanded={expanded === index}
+                    onChange={() => handleChange(index)}
                     sx={{
                         width: '100%',
                         borderRadius: 2,
@@ -263,11 +223,7 @@ const FormCreateUserList = (props: Props) => {
                         id="panel1bh-header"
                     >
                         <Typography component="span" sx={{ width: '33%', flexShrink: 0, fontWeight: 600 }}>
-                            {item.formData.email ?
-                                item.formData.email
-                                :
-                                "Item " + item.index
-                            }
+                            {item.formData.email}
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{
@@ -279,10 +235,10 @@ const FormCreateUserList = (props: Props) => {
                         <Box sx={{
                             display: 'grid',
                             gridTemplateColumns: 'auto auto',
-                            gap: 2
+                            gap: 1.5
                         }}>
                             <InputFieldUser
-                                disabled={Number(item.index) < props.listCreateUser.length}
+                                disabled={item.isStatusButton}
                                 title="First Name"
                                 name="firstName"
                                 value={item.formData.firstName}
@@ -290,68 +246,71 @@ const FormCreateUserList = (props: Props) => {
                                 placeholder="Nhập First Name"
                                 textError={item.textError.errorFirstName}
                                 inputRef={refInput.current.refFirstName}
-                                index={item.index}
+                                index={index}
                             />
 
                             <InputFieldUser
-                                disabled={Number(item.index) < props.listCreateUser.length}
+                                disabled={item.isStatusButton}
                                 title="Last Name"
                                 name="lastName"
                                 value={item.formData.lastName}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập Last Name"
                                 textError={item.textError.errorLastName}
-                                index={item.index}
+                                inputRef={refInput.current.refLastName}
+                                index={index}
                             />
 
                             <InputFieldUser
-                                disabled={Number(item.index) < props.listCreateUser.length}
+                                disabled={item.isStatusButton}
                                 title="Username"
                                 name="username"
                                 value={item.formData.username}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập username"
                                 textError={item.textError.errorUserName}
-                                index={item.index}
+                                inputRef={refInput.current.refUsername}
+                                index={index}
                             />
 
                             <InputFieldUser
-                                disabled={Number(item.index) < props.listCreateUser.length}
+                                disabled={item.isStatusButton}
                                 title="Phone"
                                 name="phone"
                                 value={item.formData.phone}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập phone"
                                 textError={item.textError.errorPhone}
-                                index={item.index}
+                                inputRef={refInput.current.refPhone}
+                                index={index}
                             />
 
                             <InputFieldUser
-                                disabled={Number(item.index) < props.listCreateUser.length}
+                                disabled={item.isStatusButton}
                                 title="Email"
                                 name="email"
                                 value={item.formData.email}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập email"
                                 textError={item.textError.errorEmail}
-                                index={item.index}
+                                inputRef={refInput.current.refEmail}
+                                index={index}
                             />
 
                             <InputFieldUser
-                                disabled={Number(item.index) < props.listCreateUser.length}
+                                disabled={item.isStatusButton}
                                 title="Password"
                                 name="password"
                                 value={item.formData.password}
                                 onChange={handleChangeValue}
                                 placeholder="Nhập password"
                                 textError={item.textError.errorPassword}
-                                index={item.index}
+                                inputRef={refInput.current.refPassword}
+                                index={index}
                             />
                         </Box>
 
                         <Box sx={{
-                            flex: 1,
-                            width: '100%',
                             display: 'grid',
                             gridTemplateColumns: 'auto auto',
                             textAlign: 'end',
@@ -364,39 +323,29 @@ const FormCreateUserList = (props: Props) => {
                             },
                         }}>
                             <PrimaryButton
-                                label="Xóa bảng"
-                                disabled={Number(props.expanded) !== props.listCreateUser.length}
-                                onPress={() => {
-                                    deleteForm(item.index);
-                                }}
+                                label={!item.isStatusButton ? "Lưu" : "Chỉnh sửa"}
                                 styleButton={{
-                                    padding: ' 10px 30px ',
+                                    padding: ' 10px 20px ',
+                                    fontSize: 12
+                                }}
+                                onPress={() => {
+                                    updateDataByIndex(index);
                                 }}
                             />
-
                             <PrimaryButton
-                                label="Lưu dữ liệu"
-                                disabled={Number(props.expanded) !== props.listCreateUser.length}
-                                onPress={() => {
-                                    saveForm(item.index);
-                                }}
+                                label={'Xóa'}
                                 styleButton={{
-                                    padding: ' 10px 20px '
+                                    padding: ' 10px 20px ',
+                                    fontSize: 12
                                 }}
+                                onPress={() => deleteForm(index)}
                             />
                         </Box>
                     </AccordionDetails>
                 </Accordion>
             ))}
 
-            <Button
-                variant="contained"
-                disabled={props.buttonSaveData}
-                startIcon={<AddIcon />}
-                onClick={() => addForm()}
-            >
-                Thêm ô nhập
-            </Button>
+
         </Box>
     )
 }
