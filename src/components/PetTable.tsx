@@ -1,102 +1,69 @@
+import React from "react";
 import {
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
+  Box,
+  Pagination,
 } from "@mui/material";
 import { IPet } from "../types/types";
 import { PetRow } from "./PetRow";
 
-interface IPetTableProps {
+interface PetTableProps {
   pets: IPet[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (event: React.ChangeEvent<unknown>, value: number) => void;
 }
 
-export const PetTable: React.FC<IPetTableProps> = ({ pets }) => {
+const commonStyles = {
+  fontSize: {
+    xs: "0.75rem",
+    sm: "0.875rem",
+    md: "1rem",
+    lg: "1.125rem",
+  },
+  fontWeight: "bold",
+  backgroundColor: "#f5f5f5",
+};
+
+export const PetTable: React.FC<PetTableProps> = ({
+  pets,
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        boxShadow: 3,
-        borderRadius: "8px",
-        overflowX: "auto",
-      }}
-    >
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer component={Paper}>
+      <Table>
         <TableHead>
           <TableRow>
-            <TableCell
-              sx={{
-                fontWeight: "bold",
-                backgroundColor: "#f5f5f5",
-                fontSize: {
-                  xs: "0.75rem",
-                  sm: "0.875rem",
-                  md: "1rem",
-                  lg: "1.125rem",
-                },
-              }}
-            >
-              ID
-            </TableCell>
-            <TableCell
-              sx={{
-                fontWeight: "bold",
-                backgroundColor: "#f5f5f5",
-                fontSize: {
-                  xs: "0.75rem",
-                  sm: "0.875rem",
-                  md: "1rem",
-                  lg: "1.125rem",
-                },
-              }}
-            >
-              Name
-            </TableCell>
-            <TableCell
-              sx={{
-                fontWeight: "bold",
-                backgroundColor: "#f5f5f5",
-                fontSize: {
-                  xs: "0.75rem",
-                  sm: "0.875rem",
-                  md: "1rem",
-                  lg: "1.125rem",
-                },
-              }}
-            >
-              Status
-            </TableCell>
-            <TableCell
-              sx={{
-                fontWeight: "bold",
-                backgroundColor: "#f5f5f5",
-                fontSize: {
-                  xs: "0.75rem",
-                  sm: "0.875rem",
-                  md: "1rem",
-                  lg: "1.125rem",
-                },
-              }}
-            >
-              Category{" "}
-            </TableCell>
+            <TableCell sx={commonStyles}>ID</TableCell>
+            <TableCell sx={commonStyles}>Name</TableCell>
+            <TableCell sx={commonStyles}>Status</TableCell>
+            <TableCell sx={commonStyles}>Category</TableCell>
+            <TableCell sx={commonStyles}>Tags</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {pets.length > 0 ? (
-            pets.map((pet) => <PetRow key={pet.id} pet={pet} />)
-          ) : (
-            <TableRow>
-              <TableCell colSpan={4} align="center">
-                No pets found
-              </TableCell>
-            </TableRow>
-          )}
+          {pets.map((pet, index) => (
+            <PetRow key={`${pet.id}-${index}`} pet={pet} />
+          ))}
         </TableBody>
       </Table>
+      <Box display="flex" justifyContent="center" mt={2}>
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={onPageChange}
+          color="primary"
+          sx={{ padding: 2 }}
+        />
+      </Box>
     </TableContainer>
   );
 };

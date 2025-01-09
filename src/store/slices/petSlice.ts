@@ -22,11 +22,12 @@ const initialState: PetState = {
 
 export const fetchPetsByStatus = createAsyncThunk(
   "pets/fetchByStatus",
-  async (status: Status, { rejectWithValue }) => {
+  async ({ status }: { status: Status }, { rejectWithValue }) => {
     try {
       const response = await apiClient.get(
         `/pet/findByStatus?status=${status}`
       );
+      console.log("API Response:", response.data);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

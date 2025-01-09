@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { StatusSelector } from "../components/StatusSelector";
@@ -6,39 +6,48 @@ import { PetTable } from "../components/PetTable";
 import { ActionButton } from "../components/ActionButton";
 import { Loading } from "../components/Loading";
 import { Status } from "../types/types";
-import { isLoggedIn } from "../utils/checkAuthentication";
 import {
   fetchPetsByStatus,
   selectPets,
   selectStatus,
   selectError,
+  selectCurrentPage,
+  selectTotalPages,
+  setPage,
 } from "../store/slices/petSlice";
 import backgroundImg from "../assets/3.jpg";
 import { AppDispatch } from "../store/store";
-import { useNavigate } from "react-router-dom";
+
+const commonStyles = {
+  display: "flex",
+  justifyContent: "center",
+  mt: 4,
+};
 
 const FindPetsByStatus: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const pets = useSelector(selectPets);
   const status = useSelector(selectStatus);
   const error = useSelector(selectError);
+  const currentPage = useSelector(selectCurrentPage);
+  const totalPages = useSelector(selectTotalPages);
   const [loadingPage, setLoadingPage] = useState<boolean>(true);
   const [selectedStatus, setSelectedStatus] = useState<Status>(
     Status.AVAILABLE
   );
-  const navigate = useNavigate();
+  const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!isLoggedIn()) {
-      navigate("/login");
-    } else {
-      setLoadingPage(false);
-    }
+    setLoadingPage(false);
   }, []);
 
-  const fetchPets = async () => {
+  const fetchPets = useCallback(async () => {
     try {
-      await dispatch(fetchPetsByStatus(selectedStatus)).unwrap();
+      await dispatch(
+        fetchPetsByStatus({
+          status: selectedStatus,
+        })
+      ).unwrap();
     } catch (err) {
       if (err instanceof Error) {
         console.error("Error:", err.message);
@@ -46,6 +55,30 @@ const FindPetsByStatus: React.FC = () => {
         console.error("Unexpected error:", err);
       }
     }
+  }, [dispatch, selectedStatus]);
+
+  useEffect(() => {
+    if (isSearchClicked) {
+      fetchPets();
+      setIsSearchClicked(false);
+    }
+  }, [isSearchClicked, fetchPets]);
+
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, [isSearchClicked, dispatch]);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    dispatch(setPage(value));
+  };
+
+  const displayedPets = pets.slice((currentPage - 1) * 10, currentPage * 10);
+
+  const handleSearchClick = () => {
+    setIsSearchClicked(true);
   };
 
   return (
@@ -74,7 +107,7 @@ const FindPetsByStatus: React.FC = () => {
       />
       <Box sx={{ p: 4, zIndex: 1 }}>
         {loadingPage ? (
-          <Box display="flex" justifyContent="center" mt={4}>
+          <Box sx={commonStyles}>
             <Loading />
           </Box>
         ) : (
@@ -108,11 +141,11 @@ const FindPetsByStatus: React.FC = () => {
                 selectedStatus={selectedStatus}
                 setSelectedStatus={setSelectedStatus}
               />
-              <ActionButton onClick={fetchPets} text="Search" />
+              <ActionButton onClick={handleSearchClick} text="Search" />
             </Box>
 
             {status === "loading" ? (
-              <Box display="flex" justifyContent="center" mt={4}>
+              <Box sx={commonStyles}>
                 <CircularProgress />
               </Box>
             ) : error ? (
@@ -120,7 +153,12 @@ const FindPetsByStatus: React.FC = () => {
                 {error}
               </Typography>
             ) : (
-              <PetTable pets={pets} />
+              <PetTable
+                pets={displayedPets}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             )}
           </>
         )}
