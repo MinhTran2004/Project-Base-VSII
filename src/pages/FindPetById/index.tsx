@@ -1,15 +1,22 @@
 import PetTable from "../../components/Table";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useDebounce from "../../hooks/useDebounce";
-import { useGetPetByIdQuery, useGetPetsQuery } from "../../store/api/apiCaller";
+import { useGetPetByIdQuery } from "../../store/api/apiCaller";
 import SearchInput from "../../components/Search";
+import { Typography } from "@mui/material";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayloadUser } from "../../types/interfaceJwt";
 
 const FindPetById = () => {
   const [inputValue, setInputValue] = useState<number>(0);
-  // const { data } = useGetPetsQuery();
   const debounce = useDebounce(inputValue);
   const [errMess, setErrMess] = useState<string>("");
-  const { data: PropID, isLoading, error } = useGetPetByIdQuery(debounce);
+  const {
+    data: dataPropID,
+    isLoading,
+    error,
+  } = useGetPetByIdQuery(debounce, { skip: !inputValue });
 
   const handleChangInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,11 +30,46 @@ const FindPetById = () => {
       // console.log({ debounce });
     }
   };
+  const checkedUser = useMemo(() => {
+    if (Cookies.get("token")) {
+      const token = `${Cookies.get("token")}`;
+      const decoded = jwtDecode<JwtPayloadUser>(token);
+      return decoded;
+    }
+  }, [Cookies.get("token")]);
 
   return (
     <>
-      <SearchInput handleChangInput={handleChangInput} errMess={errMess} />
-      <PetTable propsData={PropID} error={error} isLoading={isLoading} />
+      {Cookies.get("token") ? (
+        <>
+          {checkedUser && (
+            <>
+              <Typography
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                }}
+                variant="h4"
+                color="warning"
+              >
+                FIND PET BY ID
+              </Typography>
+              <SearchInput
+                handleChangInput={handleChangInput}
+                errMess={errMess}
+              />
+              <PetTable
+                propsData={dataPropID}
+                error={error}
+                isLoading={isLoading}
+              />
+            </>
+          )}
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

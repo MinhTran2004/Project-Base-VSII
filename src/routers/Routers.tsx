@@ -1,7 +1,5 @@
 const Routers = () => {
-  return (
-    <div>Routers</div>
-  )
-}
+  return <div>Routers</div>;
+};
 
-export default Routers
+export default Routers;

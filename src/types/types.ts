@@ -39,16 +39,26 @@ export interface IOrder {
 }
 
 export interface IUser {
-  id: number;
+  id?: number;
   username: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   phone: string;
-  userStatus: Status;
+  userStatus: number;
 }
 
 export interface PetResponse {
   data: IPet[];
+}
+
+export interface LoginResponse {
+  token: string;
+}
+export interface UserInfo {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
 }

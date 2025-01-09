@@ -15,10 +15,10 @@ const ErrorPage = ({ status }: ErrorCheckProps) => {
     errorMessages[status] || `Lỗi không xác định (HTTP ${status})`;
 
   useEffect(() => {
-    if (status === "400") {
+    if (status === 400) {
       alert("400 Bad Request: Yêu cầu không hợp lệ. Vui lòng kiểm tra lại.");
     }
-    if (status === "403") {
+    if (status === 403) {
       navigate("/error");
     }
     // alert("403 Forbidden: Người dùng không được phép truy cập.");

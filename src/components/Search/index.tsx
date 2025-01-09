@@ -1,4 +1,4 @@
-import { Button, TextField, Tooltip, Typography } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { SearchStyle } from "./styled";
 import { useRef } from "react";

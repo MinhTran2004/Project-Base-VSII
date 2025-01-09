@@ -1,3 +1,3 @@
 export interface ErrorCheckProps {
-  status: string;
+  status: number;
 }

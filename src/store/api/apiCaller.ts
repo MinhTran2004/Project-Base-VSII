@@ -1,6 +1,6 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi, FetchArgs } from "@reduxjs/toolkit/query/react";
 import customBaseQuery from "./fetchBase";
-import { IPet } from "../../types/types";
+import { IPet, IUser, LoginResponse, UserInfo } from "../../types/types";
 
 export const apiCaller = createApi({
   reducerPath: "apiCaller",
@@ -21,7 +21,41 @@ export const apiCaller = createApi({
       query: (id) => `/pet/${id}`,
       providesTags: [{ type: "Posts" }],
     }),
+
+    loginUser: builder.mutation<
+      LoginResponse,
+      { username: string; password: string }
+    >({
+      query: ({ username, password }) => ({
+        url: `/user/login`,
+        method: "GET",
+        params: { username, password },
+      }),
+    }),
+    getUserInfo: builder.query<UserInfo, string>({
+      query: (username) => {
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          ?.split("=")[1];
+
+        if (!token) throw new Error("Token không tồn tại");
+
+        return {
+          url: `/user/${username}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetPetsQuery, useGetPetByIdQuery } = apiCaller;
+export const {
+  useGetPetsQuery,
+  useGetPetByIdQuery,
+  useLoginUserMutation,
+  useGetUserInfoQuery,
+} = apiCaller;

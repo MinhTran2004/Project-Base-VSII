@@ -1,10 +1,17 @@
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
+import LogInForm from "./pages/LogIn";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   return (
     <>
-      <HomePage />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LogInForm />} />
+        <Route path="/error" element={<ErrorPage status={404} />} />
+      </Routes>
     </>
   );
 }
