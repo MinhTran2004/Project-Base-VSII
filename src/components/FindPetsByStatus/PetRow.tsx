@@ -1,6 +1,6 @@
 import React from "react";
 import { TableCell, TableRow } from "@mui/material";
-import { IPet } from "../types/types";
+import { IPet } from "../../types/types";
 
 interface PetRowProps {
   pet: IPet;

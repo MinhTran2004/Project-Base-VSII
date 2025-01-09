@@ -10,7 +10,7 @@ import {
   Box,
   Pagination,
 } from "@mui/material";
-import { IPet } from "../types/types";
+import { IPet } from "../../types/types";
 import { PetRow } from "./PetRow";
 
 interface PetTableProps {

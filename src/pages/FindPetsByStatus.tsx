@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { StatusSelector } from "../components/StatusSelector";
-import { PetTable } from "../components/PetTable";
-import { ActionButton } from "../components/ActionButton";
-import { Loading } from "../components/Loading";
+import { StatusSelector } from "../components/FindPetsByStatus/StatusSelector";
+import { PetTable } from "../components/FindPetsByStatus/PetTable";
+import { ActionButton } from "../components/FindPetsByStatus/ActionButton";
+import { Loading } from "../components/FindPetsByStatus/Loading";
 import { Status } from "../types/types";
 import {
   fetchPetsByStatus,
@@ -17,6 +17,9 @@ import {
 } from "../store/slices/petSlice";
 import backgroundImg from "../assets/3.jpg";
 import { AppDispatch } from "../store/store";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/FindPetsByStatus/Header";
+import Cookies from "js-cookie";
 
 const commonStyles = {
   display: "flex",
@@ -36,10 +39,17 @@ const FindPetsByStatus: React.FC = () => {
     Status.AVAILABLE
   );
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setLoadingPage(false);
-  }, []);
+    const sessionId = Cookies.get("sessionId");
+
+    if (!sessionId) {
+      navigate("/login");
+    } else {
+      setLoadingPage(false);
+    }
+  }, [navigate]);
 
   const fetchPets = useCallback(async () => {
     try {
@@ -82,88 +92,91 @@ const FindPetsByStatus: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        backgroundImage: `url(${backgroundImg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
+    <>
+      <Header />
       <Box
         sx={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(236, 231, 231, 0.5)",
-          zIndex: 0,
+          position: "relative",
+          backgroundImage: `url(${backgroundImg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
-      />
-      <Box sx={{ p: 4, zIndex: 1 }}>
-        {loadingPage ? (
-          <Box sx={commonStyles}>
-            <Loading />
-          </Box>
-        ) : (
-          <>
-            <Typography
-              mb={3}
-              textAlign="center"
-              sx={{
-                fontSize: {
-                  xs: "1.5rem",
-                  sm: "2rem",
-                  md: "2.5rem",
-                  lg: "3rem",
-                },
-                fontWeight: "bold",
-                textTransform: "uppercase",
-                color: "#332113",
-              }}
-            >
-              Find Pets by Status
-            </Typography>
-
-            <Box
-              display="flex"
-              alignItems="center"
-              gap={2}
-              mb={4}
-              justifyContent="center"
-            >
-              <StatusSelector
-                selectedStatus={selectedStatus}
-                setSelectedStatus={setSelectedStatus}
-              />
-              <ActionButton onClick={handleSearchClick} text="Search" />
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(236, 231, 231, 0.5)",
+            zIndex: 0,
+          }}
+        />
+        <Box sx={{ p: 4, zIndex: 1 }}>
+          {loadingPage ? (
+            <Box sx={commonStyles}>
+              <Loading />
             </Box>
-
-            {status === "loading" ? (
-              <Box sx={commonStyles}>
-                <CircularProgress />
-              </Box>
-            ) : error ? (
-              <Typography color="error" align="center" mt={4}>
-                {error}
+          ) : (
+            <>
+              <Typography
+                mb={3}
+                textAlign="center"
+                sx={{
+                  fontSize: {
+                    xs: "1.5rem",
+                    sm: "2rem",
+                    md: "2.5rem",
+                    lg: "3rem",
+                  },
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                  color: "#332113",
+                }}
+              >
+                Find Pets by Status
               </Typography>
-            ) : (
-              <PetTable
-                pets={displayedPets}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            )}
-          </>
-        )}
+
+              <Box
+                display="flex"
+                alignItems="center"
+                gap={2}
+                mb={4}
+                justifyContent="center"
+              >
+                <StatusSelector
+                  selectedStatus={selectedStatus}
+                  setSelectedStatus={setSelectedStatus}
+                />
+                <ActionButton onClick={handleSearchClick} text="Search" />
+              </Box>
+
+              {status === "loading" ? (
+                <Box sx={commonStyles}>
+                  <CircularProgress />
+                </Box>
+              ) : error ? (
+                <Typography color="error" align="center" mt={4}>
+                  {error}
+                </Typography>
+              ) : (
+                <PetTable
+                  pets={displayedPets}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

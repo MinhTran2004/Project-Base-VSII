@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Status } from "../types/types";
+import { Status } from "../../types/types";
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
 interface StatusSelectorProps {
