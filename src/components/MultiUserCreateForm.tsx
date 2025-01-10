@@ -3,7 +3,7 @@ import InputField from "./InputField";
 import ButtonCreateUser from "./ButtonCreateUser";
 import ModalDisplayListUser from "./ModalDisplayListUser";
 import { validateEmail, validatePhoneNumber, validateUserName, validatePassword, validateName } from "../utils/validation";  // Import các hàm validate
-import { User } from "../types";
+import { User } from "../types/types";
 import { ToastContainer, toast } from 'react-toastify';
 
 
@@ -55,7 +55,6 @@ const MultiUserCreateForm: React.FC = () => {
     const validate = () => {
         const newErrors: { [key: string]: string } = {};
 
-        // Thực hiện kiểm tra và trả về lỗi nếu có
         newErrors.userName = validateUserName(user.userName) || "";
         newErrors.firstName = validateName(user.firstName, "Tên") || "";
         newErrors.lastName = validateName(user.lastName, "Họ") || "";
@@ -63,45 +62,48 @@ const MultiUserCreateForm: React.FC = () => {
         newErrors.password = validatePassword(user.password) || "";
         newErrors.phoneNumber = validatePhoneNumber(user.phoneNumber) || "";
 
-        // Loại bỏ các trường không có lỗi
-        for (const key in newErrors) {
-            if (!newErrors[key]) {
-                delete newErrors[key];
-            }
-        }
-
-        setErrors(newErrors);
-
-        return newErrors;
+        return Object.keys(newErrors)
+            .filter((key) => newErrors[key]) 
+            .reduce((acc, key) => {
+                acc[key] = newErrors[key];
+                return acc;
+            }, {} as { [key: string]: string });
     };
+
 
     const handleSubmit = async () => {
         const validationErrors = validate();
+        setErrors(validationErrors); 
+
         if (Object.keys(validationErrors).length === 0) {
-            // Xử lý submit thành công
             setIsLoadingSubmit(true);
             setListUser((prevList) => [...prevList, user]);
-            setUser({
-                userName: "",
-                firstName: "",
-                lastName: "",
-                email: "",
-                password: "",
-                phoneNumber: "",
-                userStatus: 1,
-            });
+           
             setTimeout(() => {
+                setUser({
+                    userName: "",
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    password: "",
+                    phoneNumber: "",
+                    userStatus: 1,
+                });
                 setIsLoadingSubmit(false);
                 toast.success("Thêm vào danh sách thành công!");
             }, 1000);
+
+           
         } else {
-            // Focus vào input đầu tiên có lỗi
-            const firstErrorField = Object.keys(validationErrors)[0];
-            if (inputRefs.current[firstErrorField]) {
-                inputRefs.current[firstErrorField]?.focus();
-            }
+            const firstErrorField = Object.keys(validationErrors)[0]; 
+            setTimeout(() => {
+                if (inputRefs.current[firstErrorField]) {
+                    inputRefs.current[firstErrorField]?.focus(); 
+                }
+            }, 0); 
         }
     };
+
 
 
     const handleShowModal = () => {

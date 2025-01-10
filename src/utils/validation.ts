@@ -1,9 +1,18 @@
 export const validateEmail = (email: string): string | null => {
+    if (email.length === 0) {
+        return "Email là bắt buộc.";
+    }
+
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email) ? null : "Định dạng email không hợp lệ.";
 };
 
+
 export const validatePhoneNumber = (phone: string): string | null => {
+    if (phone.length === 0) {
+        return "Số điện thoại là bắt buộc.";
+    }
+
     const phonePattern = /^(03|05|07|08|09)[0-9]{8}$/;
     return phonePattern.test(phone) ? null : "Định dạng số điện thoại không hợp lệ.";
 };
