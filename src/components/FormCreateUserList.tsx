@@ -3,46 +3,19 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InputFieldUser from "./InputFieldUser";
 import PrimaryButton from "./PrimaryButton";
 import React, { useRef } from "react";
-
-export interface ListCreateUser {
-    formData: {
-        username: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        password: string,
-        phone: string,
-        userStatus: number,
-    },
-    textError: {
-        errorUserName: string,
-        errorFirstName: string,
-        errorLastName: string,
-        errorEmail: string,
-        errorPassword: string,
-        errorPhone: string,
-    },
-    isStatusButton: boolean,
-}
+import { IFormFieldUser, IRefFormFieldUser } from "../types/types";
+import { initRefFormFieldUser } from "../types/initTypes";
 
 interface Props {
-    listDataCreateUser: ListCreateUser[],
-    setListDataCreateUser: (text: ListCreateUser[]) => void,
+    listDataCreateUser: IFormFieldUser[],
+    setListDataCreateUser: (text: IFormFieldUser[]) => void,
 }
 
 const FormCreateUserList = (props: Props) => {
     const [expanded, setExpanded] = React.useState(props.listDataCreateUser.length);
-    
-    const refInput = useRef({
-        refUsername: React.createRef<HTMLInputElement>(),
-        refFirstName: React.createRef<HTMLInputElement>(),
-        refLastName: React.createRef<HTMLInputElement>(),
-        refEmail: React.createRef<HTMLInputElement>(),
-        refPassword: React.createRef<HTMLInputElement>(),
-        refPhone: React.createRef<HTMLInputElement>(),
-    })
+    const refInput = useRef<IRefFormFieldUser>(initRefFormFieldUser);
 
-    const checkNullField = (index: number, listData: ListCreateUser) => {
+    const checkNullField = (index: number, listData: IFormFieldUser) => {
         const updatedList = [...props.listDataCreateUser];
         updatedList[index] = {
             ...updatedList[index],

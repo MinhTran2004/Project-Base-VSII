@@ -48,3 +48,49 @@ export interface IUser {
     phone: string,
     userStatus: number,
 }
+// start
+export interface IAccount {
+    value: {
+        email: string,
+        password: string,
+    },
+    textError: {
+        errorEmail: string,
+        errorPassword: string,
+    }
+}
+
+export interface IRefAccount {
+    refUsername: React.RefObject<HTMLInputElement>,
+    refPassword: React.RefObject<HTMLInputElement>,
+}
+
+export interface IFormFieldUser {
+    formData: {
+        username: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        password: string,
+        phone: string,
+        userStatus: number,
+    },
+    textError: {
+        errorUserName: string,
+        errorFirstName: string,
+        errorLastName: string,
+        errorEmail: string,
+        errorPassword: string,
+        errorPhone: string,
+    },
+    isStatusButton: boolean,
+}
+
+export interface IRefFormFieldUser {
+    refUsername: React.RefObject<HTMLInputElement>,
+    refFirstName: React.RefObject<HTMLInputElement>,
+    refLastName: React.RefObject<HTMLInputElement>,
+    refEmail: React.RefObject<HTMLInputElement>,
+    refPassword: React.RefObject<HTMLInputElement>,
+    refPhone: React.RefObject<HTMLInputElement>,
+}

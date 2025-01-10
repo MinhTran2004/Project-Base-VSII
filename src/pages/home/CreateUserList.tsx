@@ -2,45 +2,23 @@ import { Box, Button, Typography } from "@mui/material"
 import React, { useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 import InputFieldUser from "../../components/InputFieldUser";
-import FormCreateUserList, { ListCreateUser } from "../../components/FormCreateUserList";
-import axios from 'axios';
-import { getErrorMessage } from "../../utils/http-status-code";
+import FormCreateUserList from "../../components/FormCreateUserList";
+import { IFormFieldUser, IRefFormFieldUser } from "../../types/types";
+import { initFormFieldUser, initRefFormFieldUser } from "../../types/initTypes";
+import UserService from "../../service/user";
 import { useNavigate } from "react-router-dom";
 
 const CreateUserList = () => {
     const navigate = useNavigate();
-    const [listDataCreatedUser, setListDataCreateUser] = useState<ListCreateUser[]>([]);
 
-    const refFieldUser = useRef({
-        refUsername: React.createRef<HTMLInputElement>(),
-        refFirstName: React.createRef<HTMLInputElement>(),
-        refLastName: React.createRef<HTMLInputElement>(),
-        refEmail: React.createRef<HTMLInputElement>(),
-        refPassword: React.createRef<HTMLInputElement>(),
-        refPhone: React.createRef<HTMLInputElement>(),
-    })
-
-    const [formFieldUser, setFormFieldUser] = React.useState({
-        formData: {
-            username: "asd",
-            firstName: "asd",
-            lastName: "asd",
-            email: "tranminh209204@gmail.com",
-            password: "123456",
-            phone: "0987654321",
-            userStatus: 0,
-        },
-        textError: {
-            errorUserName: '',
-            errorFirstName: '',
-            errorLastName: '',
-            errorEmail: '',
-            errorPassword: '',
-            errorPhone: '',
-        },
-        isStatusButton: true,
-    });
-
+    // get data in localStorage
+    const storeAccount = localStorage.getItem('account');
+    const account = JSON.parse(storeAccount || '');
+    console.log(account);
+    
+    const [listDataCreatedUser, setListDataCreateUser] = useState<IFormFieldUser[]>([]);
+    const [formFieldUser, setFormFieldUser] = React.useState<IFormFieldUser>(initFormFieldUser);
+    const refFieldUser = useRef<IRefFormFieldUser>(initRefFormFieldUser);
 
     const checkInputData = () => {
         let check = true;
@@ -141,11 +119,14 @@ const CreateUserList = () => {
     };
 
     const postListDataCreateUser = async () => {
-        try {
-            await axios.post(`https://petstore.swagger.io/v2/user/createWithList`);
-        } catch (e: any) {
-            const messenger = getErrorMessage(e.status.toString(), navigate);
-            alert(messenger);
+        const data = listDataCreatedUser.map((item) => {
+            return item.formData;
+        });
+
+        const reponse = await UserService.postUserList(data, navigate);
+        if (reponse) {
+            setListDataCreateUser([]);
+            alert('Thêm dữ liệu thành công');
         }
     }
 
