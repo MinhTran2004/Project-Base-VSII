@@ -27,8 +27,12 @@ export const createOrder = async (order: Omit<IOrder, 'id'>) => {
 };
 
 // Fetch an order by ID
-export const fetchOrder = async (orderId: number) => {
-  return await instance.get(`/store/order/${orderId}`);
+export const fetchOrder = async (id: number) => {
+  return await instance.get(`/store/order/${id}`);
+};
+
+export const deleteOrder = async (id: number) => {
+  return await instance.get(`/store/order/${id}`);
 };
 
 export default instance;

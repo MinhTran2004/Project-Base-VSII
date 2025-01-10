@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Grid, Typography, Button, CircularProgress, TextField, Container, Box, Alert, MenuItem, Select, FormControl, InputLabel, SelectChangeEvent } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
-import { placeOrderThunk } from '../store/services/order.services';
+import { placeOrderThunk, deleteOrderThunk } from '../store/services/order.services';
 import OrderDetails from '../components/OrderDetail';
 import MuiCheckbox from '../components/CheckBox'; // Custom checkbox component
 import MuiDatePicker from '../components/MuiDatePicker'; // Custom date picker component
@@ -14,7 +14,7 @@ const PlaceOrder: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const size = useResize(); // Using the useResize hook
     const [order, setOrder] = useState<IOrder>({
-        id: Date.now(), // Sử dụng timestamp để tạo id tạm thời
+        id: Date.now() % 10, // Ensuring id is below 10 by using modulo operator
         petId: 0,
         quantity: 0,
         shipDate: "",
@@ -81,9 +81,9 @@ const PlaceOrder: React.FC = () => {
     };
 
     const validateForm = () => {
-        const { petId, quantity, shipDate, status } = order;
-        if (petId === 0 || quantity === 0 || !shipDate || !status) {
-            setNotification({ message: "All fields are required", severity: "error" });
+        const { petId, quantity, shipDate, status, id } = order;
+        if (petId === 0 || quantity === 0 || !shipDate || !status || id >= 10) {
+            setNotification({ message: "All fields are required and Order ID must be less than 10", severity: "error" });
             return false;
         }
         return true;
@@ -94,6 +94,23 @@ const PlaceOrder: React.FC = () => {
         const activityLog = localStorage.getItem('activityLog') ? JSON.parse(localStorage.getItem('activityLog') as string) : [];
         activityLog.push({ message, timestamp: new Date().toISOString() });
         localStorage.setItem('activityLog', JSON.stringify(activityLog));
+    };
+
+    const handleDeleteOrder = (orderId: number) => {
+        setLoading(true);
+        // Dispatch the delete order thunk
+        dispatch(deleteOrderThunk(orderId))
+            .unwrap()
+            .then(() => {
+                const updatedOrders = orders.filter(order => order.id !== orderId);
+                setOrders(updatedOrders);
+                setLoading(false);
+                setNotification({ message: "Order deleted successfully", severity: "success" });
+            })
+            .catch((err) => {
+                setLoading(false);
+                setNotification({ message: `Failed to delete order: ${err}`, severity: "error" });
+            });
     };
 
     const handleSubmit = () => {
@@ -122,7 +139,7 @@ const PlaceOrder: React.FC = () => {
                     setNotification({ message: "Order placed successfully", severity: "success" });
                     // Reset the form
                     setOrder({
-                        id: Date.now(), // Tạo id tạm thời mới cho đơn hàng kế tiếp
+                        id: Date.now() % 10, // Ensuring id is below 10 for the next order
                         petId: 0,
                         quantity: 0,
                         shipDate: "",
@@ -219,7 +236,7 @@ const PlaceOrder: React.FC = () => {
                         </Grid>
                     </Grid>
                 </form>
-                {orders.length > 0 && <OrderDetails orders={orders} />}
+                {orders.length > 0 && <OrderDetails orders={orders} onDeleteOrder={handleDeleteOrder} />}
                 {notification && (
                     <Box mt={2}>
                         <Alert severity={notification.severity}>{notification.message}</Alert>

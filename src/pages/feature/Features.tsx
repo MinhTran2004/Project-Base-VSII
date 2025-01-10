@@ -117,7 +117,7 @@ export default function MiniDrawer() {
     },
     {
       id: 2,
-      name: "Inbox",
+      name: "login",
       url: "/inbox",
       icon: <MailIcon />,
     },
@@ -139,7 +139,7 @@ export default function MiniDrawer() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
+        {/* <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -155,7 +155,7 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap component="div">
             {size.width > 768 ? "PC" : "Mobile"}
           </Typography>
-        </Toolbar>
+        </Toolbar> */}
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>

@@ -55,3 +55,20 @@ export const placeOrderThunk = createAsyncThunk<IOrder, Omit<IOrder, 'id'>, { re
     }
   }
 );
+
+// Thunk để delete order
+export const deleteOrderThunk = createAsyncThunk<
+  number, // Assume the payload is the deleted order's ID
+  number, // Assume the argument is the order's ID
+  { rejectValue: string }
+>('orders/deleteOrder', async (orderId, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.delete(`/store/order/${orderId}`);
+    if (response.status !== 200) {
+      throw new Error('Failed to delete order');
+    }
+    return orderId;
+  } catch (error: any) {
+    return rejectWithValue('Failed to delete order');
+  }
+});

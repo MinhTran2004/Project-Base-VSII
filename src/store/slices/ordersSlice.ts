@@ -3,6 +3,7 @@ import {
   createOrderThunk,
   fetchOrderThunk,
   placeOrderThunk,
+  deleteOrderThunk, // Import the deleteOrderThunk
 } from '../services/order.services';
 import { IOrder, Status, HttpError } from '../../types/types';
 
@@ -64,6 +65,17 @@ export const ordersSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(placeOrderThunk.rejected, (state: OrdersState, action) => {
+      state.isLoading = false;
+      state.error = action.payload as HttpError;
+    });
+    builder.addCase(deleteOrderThunk.pending, (state: OrdersState) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deleteOrderThunk.fulfilled, (state: OrdersState, action) => {
+      state.allOrders = state.allOrders.filter(order => order.id !== action.payload);
+      state.isLoading = false;
+    });
+    builder.addCase(deleteOrderThunk.rejected, (state: OrdersState, action) => {
       state.isLoading = false;
       state.error = action.payload as HttpError;
     });
