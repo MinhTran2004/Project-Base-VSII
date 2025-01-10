@@ -7,7 +7,7 @@ import PrimaryButton from "../../components/PrimaryButton";
 import { useNavigate } from "react-router-dom";
 import { IAccount, IRefAccount } from "../../types/types";
 import { initAccount, initRefAccount } from "../../types/initTypes";
-import AccountService from "../../service/account";
+import authencationService from "../../service/account";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -82,7 +82,7 @@ const Login = () => {
 
     const postCreateAccount = async () => {
         if (checkInputData()) {
-            AccountService.postAccount(formFieldAccount, navigate);
+            authencationService.postAccount(formFieldAccount, navigate);
         }
     }
 

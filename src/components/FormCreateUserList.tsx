@@ -9,6 +9,7 @@ import { initRefFormFieldUser } from "../types/initTypes";
 interface Props {
     listDataCreateUser: IFormFieldUser[],
     setListDataCreateUser: (text: IFormFieldUser[]) => void,
+    setIsStatusButton: (status: boolean) => void,
 }
 
 const FormCreateUserList = (props: Props) => {
@@ -127,6 +128,7 @@ const FormCreateUserList = (props: Props) => {
             }
             dataUserByIndex[index] = updateDataUser;
             props.setListDataCreateUser(dataUserByIndex);
+            props.setIsStatusButton(true);
         } else {
             if (result !== false) {
                 const updateDataUser = {
@@ -135,6 +137,7 @@ const FormCreateUserList = (props: Props) => {
                 }
                 dataUserByIndex[index] = updateDataUser;
                 props.setListDataCreateUser(dataUserByIndex);
+                props.setIsStatusButton(false);
             }
         }
     }
@@ -144,6 +147,11 @@ const FormCreateUserList = (props: Props) => {
         const updateList = [...props.listDataCreateUser];
         updateList.splice(index, 1);
         props.setListDataCreateUser(updateList);
+        if (index == 0) {
+            setExpanded(0);
+        } else {
+            setExpanded(index - 1);
+        }
     }
 
     const handleChangeValue = (name: string, value: string, index: number) => {

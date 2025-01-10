@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material"
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 import InputFieldUser from "../../components/InputFieldUser";
 import FormCreateUserList from "../../components/FormCreateUserList";
@@ -10,12 +10,11 @@ import { useNavigate } from "react-router-dom";
 
 const CreateUserList = () => {
     const navigate = useNavigate();
-
+    const [isStatusButton, setIsStatusButton] = useState(false);
     // get data in localStorage
-    const storeAccount = localStorage.getItem('account');
-    const account = JSON.parse(storeAccount || '');
-    console.log(account);
-    
+    // const storeAccount = localStorage.getItem('account');
+    // const account = JSON.parse(storeAccount || '');
+
     const [listDataCreatedUser, setListDataCreateUser] = useState<IFormFieldUser[]>([]);
     const [formFieldUser, setFormFieldUser] = React.useState<IFormFieldUser>(initFormFieldUser);
     const refFieldUser = useRef<IRefFormFieldUser>(initRefFormFieldUser);
@@ -24,7 +23,7 @@ const CreateUserList = () => {
         let check = true;
 
         const formData = { ...formFieldUser.formData };
-        const textError = { ...formFieldUser.textError };
+        const textError = formFieldUser.textError;
 
         const username = formData.username.toString().trim();
         const firstname = formData.firstName.toString().trim();
@@ -40,71 +39,109 @@ const CreateUserList = () => {
             textError.errorFirstName = "";
         } else {
             textError.errorFirstName = "Không để trống ô nhập";
-            check = false;
+            setFormFieldUser(prevState => ({
+                ...prevState,
+                textError: textError,
+            }));
+            refFieldUser.current.refFirstName.current?.focus();
+            return false;
         }
 
         if (lastname) {
             textError.errorLastName = "";
         } else {
             textError.errorLastName = "Không để trống ô nhập";
-            check = false;
+            setFormFieldUser(prevState => ({
+                ...prevState,
+                textError: textError,
+            }));
+            refFieldUser.current.refLastName.current?.focus();
+            return false;
         }
 
         if (username) {
             textError.errorUserName = "";
         } else {
             textError.errorUserName = "Không để trống ô nhập";
-            check = false;
+            setFormFieldUser(prevState => ({
+                ...prevState,
+                textError: textError,
+            }));
+            refFieldUser.current.refUsername.current?.focus();
+            return false;
         }
 
         if (phone) {
             if (!regexPhone.test(phone)) {
                 textError.errorPhone = "Vui lòng nhập đúng định dạng số điện thoại";
-                check = false;
+                setFormFieldUser(prevState => ({
+                    ...prevState,
+                    textError: textError,
+                }));
+                refFieldUser.current.refPhone.current?.focus();
             } else {
                 textError.errorPhone = "";
             }
         } else {
             textError.errorPhone = "Không để trống ô nhập";
-            check = false;
+            setFormFieldUser(prevState => ({
+                ...prevState,
+                textError: textError,
+            }));
+            refFieldUser.current.refPhone.current?.focus();
+            return false;
         }
 
         if (email) {
             if (!regexEmail.test(email)) {
                 textError.errorEmail = 'Không đúng định dạnh Email !!!';
-                check = false;
+                setFormFieldUser(prevState => ({
+                    ...prevState,
+                    textError: textError,
+                }));
+                refFieldUser.current.refEmail.current?.focus();
+                return false;
             } else {
                 textError.errorEmail = '';
             }
         } else {
             textError.errorEmail = 'Không để trống ô nhập';
-            check = false;
+            setFormFieldUser(prevState => ({
+                ...prevState,
+                textError: textError,
+            }));
+            refFieldUser.current.refEmail.current?.focus();
+
+            return false;
         }
 
         if (password) {
             if (password.length < 6 || password.length > 10) {
                 textError.errorPassword = "Độ dài ký tự từ 6 > 10";
-                check = false;
+                setFormFieldUser(prevState => ({
+                    ...prevState,
+                    textError: textError,
+                }));
+                refFieldUser.current.refPassword.current?.focus();
+                return false;
             } else {
                 textError.errorPassword = "";
             }
         } else {
             textError.errorPassword = "Không để trống ô nhập";
-            check = false;
+            setFormFieldUser(prevState => ({
+                ...prevState,
+                textError: textError,
+            }));
+            refFieldUser.current.refPassword.current?.focus();
+            return false;
         }
-
-        setFormFieldUser(prevState => ({
-            ...prevState,
-            textError: textError,
-        }))
-
         return check;
     };
 
     const saveForm = () => {
         if (checkInputData()) {
             setListDataCreateUser((prevState) => [formFieldUser, ...prevState]);
-            console.log(listDataCreatedUser);
         }
     }
 
@@ -267,9 +304,11 @@ const CreateUserList = () => {
                         <FormCreateUserList
                             listDataCreateUser={listDataCreatedUser}
                             setListDataCreateUser={setListDataCreateUser}
+                            setIsStatusButton={setIsStatusButton}
                         />
                     </Box>
                     <Button
+                        disabled={isStatusButton}
                         variant="contained"
                         sx={{
                             display: 'flex',
