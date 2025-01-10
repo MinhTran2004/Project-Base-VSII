@@ -1,4 +1,4 @@
-const HTTP_CODE = {
+const HTTP_CODE: { [key: number]: string } = {
   400: "Invalid request.",
   401: "Authentication required. ",
   402: "Payment required. ",

@@ -3,6 +3,7 @@ import apiClient from "../../utils/apiClient";
 import { IPet, Status } from "../../types/types";
 import axios from "axios";
 import { RootState } from "../store";
+import HTTP_CODE from "../../configs/httpCode";
 
 interface PetState {
   pets: IPet[];
@@ -23,6 +24,12 @@ const initialState: PetState = {
 export const fetchPetsByStatus = createAsyncThunk(
   "pets/fetchByStatus",
   async ({ status }: { status: Status }, { rejectWithValue }) => {
+    if (!navigator.onLine) {
+      console.error("No internet connection.");
+      return rejectWithValue(
+        "No internet connection. Please check your network."
+      );
+    }
     try {
       const response = await apiClient.get(
         `/pet/findByStatus?status=${status}`
@@ -30,10 +37,32 @@ export const fetchPetsByStatus = createAsyncThunk(
       console.log("API Response:", response.data);
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        return rejectWithValue(error.message);
+      console.error("Error caught in fetchPetsByStatus:", error);
+
+      if (axios.isAxiosError(error)) {
+        if (!error.response) {
+          console.error(
+            "No response from server, possible network issue:",
+            error
+          );
+          return rejectWithValue(
+            "Network error: Please check your connection."
+          );
+        }
+
+        const errorMessage =
+          HTTP_CODE[error.response.status] ||
+          `Unexpected server error: ${error.response.status}`;
+
+        console.error("Error from server:", {
+          status: error.response.status,
+          message: errorMessage,
+          data: error.response.data,
+        });
+        return rejectWithValue(errorMessage);
       }
-      return rejectWithValue("Unknown error occurred.");
+      console.error("Unexpected error:", error);
+      return rejectWithValue("An unknown error occurred.");
     }
   }
 );
