@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, CircularProgress, TextField, Container, Box, Typography, Alert } from "@mui/material";
+import { TextField, Container, Box, Typography, Alert, Button, CircularProgress } from "@mui/material";
+import { Navigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store/store";
 import { loginThunk } from "../../store/services/auth.service";
 import useResize from "../../hooks/useResize";
 
-const Login = () => {
+const Login: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const size = useResize();
   const [username, setUsername] = useState("");
@@ -16,6 +17,11 @@ const Login = () => {
     e.preventDefault();
     dispatch(loginThunk({ username, password }));
   };
+
+  if (token) {
+    // Redirect to home page after successful login
+    return <Navigate to="/home" />;
+  }
 
   return (
     <Container maxWidth="sm">
@@ -51,18 +57,18 @@ const Login = () => {
             size="small"
           />
           <Box mt={2} textAlign="center">
-            <Button variant="contained" type="submit" disabled={isLoading}>
-              {isLoading ? <CircularProgress size={24} /> : "Login"}
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={isLoading}
+              startIcon={isLoading ? <CircularProgress size={24} /> : null}
+            >
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </Box>
           {error && (
             <Box mt={2}>
               <Alert severity="error">{error}</Alert>
-            </Box>
-          )}
-          {token && (
-            <Box mt={2}>
-              <Alert severity="success">Login successful!</Alert>
             </Box>
           )}
         </form>
