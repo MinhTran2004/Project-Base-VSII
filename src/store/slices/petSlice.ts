@@ -5,7 +5,7 @@ import { RootState } from "../store";
 
 interface PetState {
   pets: IPet[];
-  status: "idle" | "loading" | "failed";
+  status: "loading" | "success" | "failed";
   error: string | null;
   currentPage: number;
   totalPages: number;
@@ -13,7 +13,7 @@ interface PetState {
 
 const initialState: PetState = {
   pets: [],
-  status: "idle",
+  status: "loading",
   error: null,
   currentPage: 1,
   totalPages: 1,
@@ -53,7 +53,7 @@ const petSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchPetsByStatus.fulfilled, (state, action) => {
-        state.status = "idle";
+        state.status = "success";
         state.pets = action.payload;
         state.totalPages = Math.ceil(action.payload.length / 10);
       })

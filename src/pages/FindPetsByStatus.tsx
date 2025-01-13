@@ -198,7 +198,7 @@ const FindPetsByStatus: React.FC = () => {
                   <CircularProgress sx={{ color: "#cd8f5d" }} />
                 </Box>
               )}
-              {fetchStatus === "idle" && pets.length === 0 && (
+              {fetchStatus === "success" && pets.length === 0 && (
                 <Typography
                   textAlign="center"
                   color="neutral"
@@ -215,7 +215,7 @@ const FindPetsByStatus: React.FC = () => {
                   No pets found for the selected status.
                 </Typography>
               )}
-              {fetchStatus === "idle" && pets.length > 0 && (
+              {fetchStatus === "success" && pets.length > 0 && (
                 <PetTable
                   pets={displayedPets}
                   currentPage={currentPage}
