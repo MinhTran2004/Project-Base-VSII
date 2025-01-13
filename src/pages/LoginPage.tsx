@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
       if (response.ok && data.code === 200) {
         // Lưu sessionId vào cookie với thời gian hết hạn
         const sessionId = data.message;
-        const expirationTime = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 phút
+        const expirationTime = new Date(new Date().getTime() + 60 * 60 * 1000); // 1h
         Cookies.set("sessionId", sessionId, { expires: expirationTime });
 
         navigate("/");

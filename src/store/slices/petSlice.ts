@@ -5,7 +5,7 @@ import { RootState } from "../store";
 
 interface PetState {
   pets: IPet[];
-  status: "loading" | "success" | "failed";
+  status: "Idle" | "loading" | "success" | "failed";
   error: string | null;
   currentPage: number;
   totalPages: number;
@@ -13,7 +13,7 @@ interface PetState {
 
 const initialState: PetState = {
   pets: [],
-  status: "loading",
+  status: "Idle",
   error: null,
   currentPage: 1,
   totalPages: 1,
