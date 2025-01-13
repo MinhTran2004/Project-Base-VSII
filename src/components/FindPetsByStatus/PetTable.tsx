@@ -42,7 +42,7 @@ export const PetTable: React.FC<PetTableProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell sx={commonStyles}>ID</TableCell>
+            {/* <TableCell sx={commonStyles}>ID</TableCell> */}
             <TableCell sx={commonStyles}>Name</TableCell>
             <TableCell sx={commonStyles}>Status</TableCell>
             <TableCell sx={commonStyles}>Category</TableCell>

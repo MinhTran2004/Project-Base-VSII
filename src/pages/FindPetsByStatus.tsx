@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress, Snackbar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { StatusSelector } from "../components/FindPetsByStatus/StatusSelector";
 import { PetTable } from "../components/FindPetsByStatus/PetTable";
@@ -30,7 +30,7 @@ const commonStyles = {
 const FindPetsByStatus: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const pets = useSelector(selectPets);
-  const status = useSelector(selectStatus);
+  const fetchStatus = useSelector(selectStatus);
   const error = useSelector(selectError);
   const currentPage = useSelector(selectCurrentPage);
   const totalPages = useSelector(selectTotalPages);
@@ -40,6 +40,8 @@ const FindPetsByStatus: React.FC = () => {
   );
   const [isSearchClicked, setIsSearchClicked] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [isOffline, setIsOffline] = useState<boolean>(!navigator.onLine);
 
   useEffect(() => {
     const sessionId = Cookies.get("sessionId");
@@ -52,26 +54,44 @@ const FindPetsByStatus: React.FC = () => {
   }, [navigate]);
 
   const fetchPets = useCallback(async () => {
+    if (!selectedStatus) {
+      setSnackbarOpen(true);
+      return;
+    }
+
     try {
       await dispatch(
         fetchPetsByStatus({
           status: selectedStatus,
         })
       ).unwrap();
+      setIsSearchClicked(false);
     } catch (err) {
-      if (err instanceof Error) {
-        console.error("Error:", err.message);
-      } else {
-        console.error("Unexpected error:", err);
-      }
+      console.error("Error fetching pets:", err);
+      setSnackbarOpen(true);
     }
   }, [dispatch, selectedStatus]);
 
   useEffect(() => {
-    if (isSearchClicked) {
-      fetchPets();
-      setIsSearchClicked(false);
-    }
+    const handleOnline = () => {
+      setIsOffline(false);
+      if (isSearchClicked) {
+        fetchPets();
+        setIsSearchClicked(false);
+      }
+    };
+
+    const handleOffline = () => {
+      setIsOffline(true);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
   }, [isSearchClicked, fetchPets]);
 
   useEffect(() => {
@@ -88,7 +108,16 @@ const FindPetsByStatus: React.FC = () => {
   const displayedPets = pets.slice((currentPage - 1) * 10, currentPage * 10);
 
   const handleSearchClick = () => {
-    setIsSearchClicked(true);
+    if (isOffline) {
+      setSnackbarOpen(true);
+    } else {
+      setIsSearchClicked(true);
+      fetchPets();
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -156,15 +185,37 @@ const FindPetsByStatus: React.FC = () => {
                 <ActionButton onClick={handleSearchClick} text="Search" />
               </Box>
 
-              {status === "loading" ? (
-                <Box sx={commonStyles}>
-                  <CircularProgress />
+              {fetchStatus === "loading" && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                    minHeight: { xs: "200px", sm: "300px" },
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#cd8f5d" }} />
                 </Box>
-              ) : error ? (
-                <Typography color="error" align="center" mt={4}>
-                  {error}
+              )}
+              {fetchStatus === "idle" && pets.length === 0 && (
+                <Typography
+                  textAlign="center"
+                  color="neutral"
+                  fontWeight="bold"
+                  sx={{
+                    fontSize: {
+                      xs: "0.5rem",
+                      sm: "0.7rem",
+                      md: "1rem",
+                      lg: "1.5.5rem",
+                    },
+                  }}
+                >
+                  No pets found for the selected status.
                 </Typography>
-              ) : (
+              )}
+              {fetchStatus === "idle" && pets.length > 0 && (
                 <PetTable
                   pets={displayedPets}
                   currentPage={currentPage}
@@ -172,10 +223,38 @@ const FindPetsByStatus: React.FC = () => {
                   onPageChange={handlePageChange}
                 />
               )}
+              {error && (
+                <Typography
+                  textAlign="center"
+                  color="error"
+                  sx={{
+                    fontSize: {
+                      xs: "0.5rem",
+                      sm: "0.7rem",
+                      md: "1rem",
+                      lg: "1.5.5rem",
+                    },
+                  }}
+                >
+                  {error}
+                </Typography>
+              )}
             </>
           )}
         </Box>
       </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={
+          !selectedStatus
+            ? "Please select a status."
+            : isOffline
+            ? "You are offline. Please check your connection."
+            : "Failed to fetch pets."
+        }
+      />
     </>
   );
 };

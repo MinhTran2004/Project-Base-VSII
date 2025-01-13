@@ -8,7 +8,7 @@ const Routers = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/findPetsByStatus" element={<FindPetsByStatus />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="/login" element={<LoginPage />} />

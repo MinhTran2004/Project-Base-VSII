@@ -17,8 +17,8 @@ const commonStyles = {
 
 export const PetRow: React.FC<PetRowProps> = ({ pet }) => {
   return (
-    <TableRow>
-      <TableCell sx={commonStyles}>{pet.id}</TableCell>
+    <TableRow hover>
+      {/* <TableCell sx={commonStyles}>{pet.id}</TableCell> */}
       <TableCell sx={commonStyles}>{pet.name}</TableCell>
       <TableCell
         sx={{

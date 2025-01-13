@@ -8,12 +8,33 @@ const apiClient = axios.create({
   },
 });
 
+export const handleApiError = (error: unknown): string => {
+  if (axios.isAxiosError(error)) {
+    if (!error.response) {
+      console.error("No response from server, possible network issue:", error);
+      return "Network error: Please check your connection.";
+    }
+
+    const errorMessage =
+      HTTP_CODE[error.response.status] ||
+      `Unexpected server error: ${error.response.status}`;
+    console.error("Error from server:", {
+      status: error.response.status,
+      message: errorMessage,
+      data: error.response.data,
+    });
+    return errorMessage;
+  }
+
+  console.error("Unexpected error:", error);
+  return "An unknown error occurred.";
+};
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const status = error.response?.status as keyof typeof HTTP_CODE;
-    const message = HTTP_CODE[status] || "An unexpected error occurred.";
-    return Promise.reject(new Error(message));
+    const errorMessage = handleApiError(error);
+    return Promise.reject(new Error(errorMessage));
   }
 );
 

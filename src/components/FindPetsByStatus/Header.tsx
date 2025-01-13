@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   };
 
   const handleHomeClick = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   const handlePetsClick = () => {
