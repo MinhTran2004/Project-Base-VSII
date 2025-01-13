@@ -30,12 +30,4 @@ export const handleApiError = (error: unknown): string => {
   return "An unknown error occurred.";
 };
 
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const errorMessage = handleApiError(error);
-    return Promise.reject(new Error(errorMessage));
-  }
-);
-
 export default apiClient;

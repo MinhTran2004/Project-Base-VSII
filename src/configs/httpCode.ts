@@ -3,7 +3,7 @@ const HTTP_CODE: { [key: number]: string } = {
   401: "Authentication required. ",
   402: "Payment required. ",
   403: "Forbidden. ",
-  404: "API not found. ",
+  404: "Not found. ",
   405: "Method not allowed. ",
   406: "Unacceptable. ",
   407: "Proxy authentication required. ",
