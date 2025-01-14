@@ -6,6 +6,8 @@ import { User } from "../types/types";
 import { toast } from "react-toastify";
 import { FaSadTear } from "react-icons/fa";
 import "../css/ModalDisplay.css"
+import { handleError } from "../services/handleError";
+import { useNavigate } from 'react-router-dom'; 
 
 
 interface ModalDisplayProps {
@@ -17,56 +19,31 @@ interface ModalDisplayProps {
 
 const ModalDisplayListUser: React.FC<ModalDisplayProps> = ({ show, onHide, listUser, onAddAllUsers }) => {
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleAddAllUsers = async () => {
         setLoading(true);
         try {
             const response = await addAllUsers(listUser);
-
-            switch (response.status) {
-                case 200:
-                case 201:
-                    const failed = response.data.failed || [];
-                    const failedUsers = listUser.filter((user) =>
-                        failed.some((failedUser: User) => failedUser.userName === user.userName)
-                    );
-
-                    localStorage.setItem("listUser", JSON.stringify(failedUsers));
-                    onAddAllUsers(failedUsers);
-
-                    toast.success("Đăng ký thành công!");
-                    break;
-
-                case 400:
-                    toast.error("Dữ liệu không hợp lệ, vui lòng kiểm tra lại!");
-                    break;
-
-                case 401:
-                    toast.error("Bạn không có quyền thực hiện hành động này!");
-                    break;
-
-                case 403:
-                    toast.error("Bạn không có quyền truy cập vào tài nguyên này!");
-                    break;
-
-                case 404:
-                    toast.error("Không tìm thấy tài nguyên!");
-                    break;
-
-                case 500:
-                    toast.error("Lỗi hệ thống, vui lòng thử lại sau!");
-                    break;
-
-                default:
-                    toast.error("Thêm người dùng không thành công!");
+    
+            if (response.status === 200) {
+                const failed = response.data.failed || [];
+                const failedUsers = listUser.filter((user) =>
+                    failed.some((failedUser: User) => failedUser.userName === user.userName)
+                );
+    
+                localStorage.setItem("listUser", JSON.stringify(failedUsers));
+                onAddAllUsers(failedUsers);
+    
+                toast.success("Đăng ký thành công!");
+                onHide();
+            } else {
+                console.log();
+                
+                handleError(response.status, navigate);
             }
         } catch (error: any) {
-            if (error.code === 'ECONNABORTED') {
-                toast.error("Yêu cầu bị timeout, vui lòng thử lại!");
-            } else {
-                toast.error("Lỗi mạng, vui lòng kiểm tra kết nối!");
-            }
-            console.error("Lỗi khi thêm người dùng:", error);
+            toast.error("Lỗi khi thêm người dùng:", error);
         } finally {
             setLoading(false);
         }

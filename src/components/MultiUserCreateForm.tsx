@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from 'react-router-dom';
 import InputField from "./InputField";
 import ButtonCreateUser from "./ButtonCreateUser";
 import ModalDisplayListUser from "./ModalDisplayListUser";
 import { validateEmail, validatePhoneNumber, validateUserName, validatePassword, validateName } from "../utils/validation";  // Import các hàm validate
 import { User } from "../types/types";
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'; 
 
 
 const MultiUserCreateForm: React.FC = () => {
@@ -24,6 +26,20 @@ const MultiUserCreateForm: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
     const [isLoadingModal, setIsLoadingModal] = useState(false);
+    const location = useLocation();
+    const { message, type } = location.state || {};
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (message && type) {
+            if (type === "success") {
+                toast.success(message);  
+            } else {
+                toast.error(message);   
+            }
+        }
+    }, [message, type]);
 
     const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -63,7 +79,7 @@ const MultiUserCreateForm: React.FC = () => {
         newErrors.phoneNumber = validatePhoneNumber(user.phoneNumber) || "";
 
         return Object.keys(newErrors)
-            .filter((key) => newErrors[key]) 
+            .filter((key) => newErrors[key])
             .reduce((acc, key) => {
                 acc[key] = newErrors[key];
                 return acc;
@@ -73,12 +89,12 @@ const MultiUserCreateForm: React.FC = () => {
 
     const handleSubmit = async () => {
         const validationErrors = validate();
-        setErrors(validationErrors); 
+        setErrors(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
             setIsLoadingSubmit(true);
             setListUser((prevList) => [...prevList, user]);
-           
+
             setTimeout(() => {
                 setUser({
                     userName: "",
@@ -93,16 +109,21 @@ const MultiUserCreateForm: React.FC = () => {
                 toast.success("Thêm vào danh sách thành công!");
             }, 1000);
 
-           
+
         } else {
-            const firstErrorField = Object.keys(validationErrors)[0]; 
+            const firstErrorField = Object.keys(validationErrors)[0];
             setTimeout(() => {
                 if (inputRefs.current[firstErrorField]) {
-                    inputRefs.current[firstErrorField]?.focus(); 
+                    inputRefs.current[firstErrorField]?.focus();
                 }
-            }, 0); 
+            }, 0);
         }
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('role');
+        navigate('/');
+      };
 
 
 
@@ -213,6 +234,15 @@ const MultiUserCreateForm: React.FC = () => {
                                 height="45px"
                                 loading={isLoadingSubmit}
                                 disabled={isLoadingSubmit}
+                            />
+                            
+                        </div>
+                        <div className='mt-4'>
+                            <ButtonCreateUser
+                                text="Đăng xuất"
+                                onClick={handleLogout}
+                                width="100%"
+                                height="45px"
                             />
                         </div>
                     </form>

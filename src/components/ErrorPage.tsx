@@ -12,7 +12,7 @@ const ErrorPage: React.FC = () => {
 
     return (
         <>
-            <style>
+             <style>
                 {`
       html, #root {
         margin: 0;
