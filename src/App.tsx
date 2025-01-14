@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LogInForm />} />
-        <Route path="/error" element={<ErrorPage status={404} />} />
+        <Route path="*" element={<ErrorPage status={403} />} />
       </Routes>
     </>
   );

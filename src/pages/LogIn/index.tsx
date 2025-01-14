@@ -11,13 +11,12 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import sign from "jwt-encode";
 import { LoginStyled } from "./styled";
 import { UserLogin } from "../../constants/enum";
 import { useLoginUserMutation } from "../../store/api/apiCaller";
-
 import { expirationTimeAccessToken } from "./config";
 
 interface Initial {
@@ -73,11 +72,8 @@ const LogInForm = () => {
           username: inputValue.username,
           password: inputValue.password,
         }).unwrap();
-        // Cookies.set("token", result.token); // Lưu token vào cookies
-        // window.location.reload(); // Reload để cập nhật trạng thái
 
         const secret = "userLogin";
-
         const accessToken = sign(result, secret);
         await Cookies.set("token", accessToken, {
           expires: expirationTimeAccessToken(),
@@ -85,7 +81,6 @@ const LogInForm = () => {
           sameSite: "Lax",
         });
 
-        Cookies.get("token") ? navigate("/") : navigate("/login");
         return true;
       } catch (err) {
         console.error("Đăng nhập thất bại:", err);
@@ -93,6 +88,10 @@ const LogInForm = () => {
     }
     setErrMessage(newValid);
   };
+  useEffect(() => {
+    Cookies.get("token") ? navigate("/") : navigate("/login");
+  }, [Cookies.get("token")]);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <LoginStyled>

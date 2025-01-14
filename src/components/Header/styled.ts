@@ -6,6 +6,7 @@ export const HeaderStyled = styled.div`
   display: flex;
   align-items: center;
   padding: 0 2rem;
+  justify-content: space-around;
   .header-logo {
     /* width: 300px; */
     height: 35px;

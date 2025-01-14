@@ -1,6 +1,6 @@
-import { createApi, FetchArgs } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import customBaseQuery from "./fetchBase";
-import { IPet, IUser, LoginResponse, UserInfo } from "../../types/types";
+import { IPet, LoginResponse, UserInfo } from "../../types/types";
 
 export const apiCaller = createApi({
   reducerPath: "apiCaller",
@@ -34,19 +34,9 @@ export const apiCaller = createApi({
     }),
     getUserInfo: builder.query<UserInfo, string>({
       query: (username) => {
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("token="))
-          ?.split("=")[1];
-
-        if (!token) throw new Error("Token không tồn tại");
-
         return {
           url: `/user/${username}`,
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         };
       },
     }),

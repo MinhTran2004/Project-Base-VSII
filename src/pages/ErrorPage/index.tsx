@@ -6,10 +6,10 @@ import { useEffect } from "react";
 const ErrorPage = ({ status }: ErrorCheckProps) => {
   const navigate = useNavigate();
 
-  // console.log({ status });
-  const errorMessages: Record<string, string> = {
+  const errorMessages: Record<number, string> = {
     400: "400 Bad Request: Yêu cầu không hợp lệ.",
     404: "404 Not Found: Không tìm thấy tài nguyên.", //*
+    403: "403 Not Found: Không được phép truy cập.", //*
   };
   const message =
     errorMessages[status] || `Lỗi không xác định (HTTP ${status})`;
@@ -21,7 +21,6 @@ const ErrorPage = ({ status }: ErrorCheckProps) => {
     if (status === 403) {
       navigate("/error");
     }
-    // alert("403 Forbidden: Người dùng không được phép truy cập.");
   }, [status]);
 
   return (

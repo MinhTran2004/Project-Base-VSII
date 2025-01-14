@@ -1,3 +1,6 @@
+import { SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+
 export interface IApiResponse {
   code: number;
   type: string;
@@ -61,4 +64,10 @@ export interface UserInfo {
   username: string;
   email: string;
   password: string;
+}
+
+export interface IPropData {
+  data: IPet | undefined;
+  loading: boolean;
+  error: FetchBaseQueryError | SerializedError | undefined;
 }
