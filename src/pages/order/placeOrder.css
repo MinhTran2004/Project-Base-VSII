@@ -1,0 +1,18 @@
+.custom-date-picker .MuiInputBase-root {
+    font-size: 1.2em; /* Tăng kích thước chữ */
+    padding: 10px; /* Tăng khoảng cách trong */
+    width: 100%; /* Tăng chiều rộng */
+    height: 50px; /* Tăng chiều cao */
+}
+
+.custom-date-picker .react-datepicker {
+    font-size: 1.2em; /* Tăng kích thước chữ */
+    width: 100%; /* Tăng chiều rộng */
+    height: auto; /* Đảm bảo chiều cao tự động */
+}
+
+.custom-date-picker .react-datepicker__input-container input {
+    padding: 10px; /* Tăng khoảng cách trong */
+    width: 100%; /* Tăng chiều rộng */
+    height: 50px; /* Tăng chiều cao */
+}
